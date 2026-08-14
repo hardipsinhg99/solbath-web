@@ -1,0 +1,101 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { Container } from "@/components/ui/Container";
+import { Placeholder } from "@/components/ui/Placeholder";
+import { getPost, posts } from "@/lib/data/posts";
+import { getProduct } from "@/lib/data/products";
+import { ProductCard } from "@/components/product/ProductCard";
+
+export async function generateMetadata({ params }: PageProps<"/inspiration/[slug]">) {
+  const { slug } = await params;
+  const post = getPost(slug);
+  if (!post) return {};
+  return { title: post.title, description: post.excerpt };
+}
+
+export default async function InspirationDetailPage({
+  params,
+}: PageProps<"/inspiration/[slug]">) {
+  const { slug } = await params;
+  const post = getPost(slug);
+  if (!post) notFound();
+
+  const relatedProducts = post.relatedProductSlugs
+    .map((s) => getProduct(s))
+    .filter((p): p is NonNullable<typeof p> => Boolean(p));
+
+  const morePosts = posts.filter((p) => p.slug !== post.slug).slice(0, 3);
+
+  return (
+    <div className="py-10 sm:py-14">
+      <Container>
+        <p className="text-xs font-medium text-ink-soft">
+          <Link href="/" className="hover:text-accent">
+            Home
+          </Link>{" "}
+          /{" "}
+          <Link href="/inspiration" className="hover:text-accent">
+            Inspiration
+          </Link>{" "}
+          / {post.title}
+        </p>
+
+        <div className="mx-auto mt-6 max-w-3xl">
+          <p className="text-xs font-medium uppercase tracking-[0.12em] text-accent">
+            {post.room} · {post.readTime}
+          </p>
+          <h1 className="mt-3 font-heading text-3xl text-ink sm:text-4xl">{post.title}</h1>
+          <p className="mt-4 text-base leading-relaxed text-ink-soft">{post.excerpt}</p>
+        </div>
+
+        <div className="mx-auto mt-10 aspect-[16/9] max-w-4xl overflow-hidden rounded-none">
+          <Placeholder tone={post.tone} label={post.title} className="h-full w-full" />
+        </div>
+
+        <div className="mx-auto mt-10 max-w-2xl space-y-5 text-base leading-relaxed text-ink-soft">
+          <p>
+            When planning this look, we started with the fittings and let the surfaces follow
+            — choosing finishes that would age gracefully and pairing them with tiles or
+            hardware that add warmth without competing for attention.
+          </p>
+          <p>
+            The result is a space that feels considered rather than curated: every product
+            earns its place, and every finish has been chosen to work together across at
+            least a decade of daily use.
+          </p>
+          <p>
+            Below are the exact products featured in this story — tap through for full specs,
+            finish options and to add them to your quote list.
+          </p>
+        </div>
+
+        {relatedProducts.length > 0 ? (
+          <div className="mx-auto mt-14 max-w-5xl">
+            <h2 className="font-heading text-2xl text-ink">Shop This Story</h2>
+            <div className="mt-8 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+              {relatedProducts.map((product) => (
+                <ProductCard key={product.slug} product={product} />
+              ))}
+            </div>
+          </div>
+        ) : null}
+
+        <div className="mx-auto mt-16 max-w-5xl border-t border-border pt-10">
+          <h2 className="font-heading text-2xl text-ink">More Stories</h2>
+          <div className="mt-8 grid gap-8 sm:grid-cols-3">
+            {morePosts.map((p) => (
+              <Link key={p.slug} href={`/inspiration/${p.slug}`} className="group flex flex-col">
+                <div className="aspect-[4/3] overflow-hidden rounded-none">
+                  <Placeholder tone={p.tone} label={p.room} className="h-full w-full" />
+                </div>
+                <h3 className="mt-3 font-heading text-lg text-ink group-hover:text-accent-dark">
+                  {p.title}
+                </h3>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </Container>
+    </div>
+  );
+}
