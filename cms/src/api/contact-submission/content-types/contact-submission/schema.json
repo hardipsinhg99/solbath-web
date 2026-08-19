@@ -1,0 +1,37 @@
+{
+  "kind": "collectionType",
+  "collectionName": "contact_submissions",
+  "info": {
+    "singularName": "contact-submission",
+    "pluralName": "contact-submissions",
+    "displayName": "Contact Submission",
+    "description": "Leads submitted through the site's Contact form."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "phone": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "message": {
+      "type": "text",
+      "required": true
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["new", "contacted", "closed"],
+      "default": "new"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "collectionName": "components_shared_filter_groups",
+  "info": {
+    "displayName": "Filter Group",
+    "icon": "filter",
+    "description": "A named filter facet (e.g. Finish, Size) with a list of selectable options."
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "options": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.value-item"
+    }
+  }
+}

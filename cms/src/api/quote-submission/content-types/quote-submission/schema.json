@@ -1,0 +1,50 @@
+{
+  "kind": "collectionType",
+  "collectionName": "quote_submissions",
+  "info": {
+    "singularName": "quote-submission",
+    "pluralName": "quote-submissions",
+    "displayName": "Quote Submission",
+    "description": "Leads submitted through the site's Request a Quote form."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "persona": {
+      "type": "enumeration",
+      "enum": ["homeowner", "architect", "dealer"]
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "phone": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "city": {
+      "type": "string",
+      "required": true
+    },
+    "requirement": {
+      "type": "text"
+    },
+    "initialProduct": {
+      "type": "string"
+    },
+    "selection": {
+      "type": "json"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["new", "contacted", "won", "lost"],
+      "default": "new"
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "kind": "collectionType",
+  "collectionName": "categories",
+  "info": {
+    "singularName": "category",
+    "pluralName": "categories",
+    "displayName": "Category",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "slug": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true
+    },
+    "vertical": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::vertical.vertical"
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "tagline": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "filters": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.filter-group"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "tone": {
+      "type": "enumeration",
+      "enum": ["bath", "tile", "hardware", "lifestyle", "neutral", "dark"]
+    }
+  }
+}

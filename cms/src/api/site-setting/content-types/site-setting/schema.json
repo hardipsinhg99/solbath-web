@@ -1,0 +1,48 @@
+{
+  "kind": "singleType",
+  "collectionName": "site_settings",
+  "info": {
+    "singularName": "site-setting",
+    "pluralName": "site-settings",
+    "displayName": "Site Settings",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "tagline": {
+      "type": "string"
+    },
+    "whatsappNumber": {
+      "type": "string",
+      "required": true
+    },
+    "phone": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "address": {
+      "type": "string"
+    },
+    "social": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.social-links"
+    },
+    "nav": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.nav-item"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_shared_value_items",
+  "info": {
+    "displayName": "Value Item",
+    "icon": "circle",
+    "description": "A single reusable text value, used to build editor-friendly repeatable lists (finishes, sizes, filter options)."
+  },
+  "options": {},
+  "attributes": {
+    "value": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

@@ -1,0 +1,73 @@
+export type Vertical = "bathroom-accessories" | "ceramic-tiles" | "hardware";
+
+export type PlaceholderTone = "bath" | "tile" | "hardware" | "lifestyle" | "neutral" | "dark";
+
+export interface Category {
+  slug: string;
+  vertical: Vertical;
+  name: string;
+  tagline: string;
+  description: string;
+  filters: {
+    label: string;
+    options: string[];
+  }[];
+}
+
+export interface SpecRow {
+  label: string;
+  value: string;
+}
+
+export interface Product {
+  slug: string;
+  vertical: Vertical;
+  categorySlug: string;
+  name: string;
+  collection: string;
+  shortDescription: string;
+  description: string;
+  finishes: string[];
+  sizes?: string[];
+  specs: SpecRow[];
+  tags: string[];
+  featured?: boolean;
+  isNew?: boolean;
+  tone: PlaceholderTone;
+}
+
+export interface Dealer {
+  id: string;
+  name: string;
+  city: string;
+  state: string;
+  address: string;
+  phone: string;
+  rating: number;
+  categories: Vertical[];
+}
+
+export interface Testimonial {
+  id: string;
+  name: string;
+  role: string;
+  quote: string;
+  rating: number;
+}
+
+export interface InspirationPost {
+  slug: string;
+  title: string;
+  room: string;
+  excerpt: string;
+  readTime: string;
+  tone: PlaceholderTone;
+  relatedProductSlugs: string[];
+}
+
+export interface Catalog {
+  id: string;
+  title: string;
+  vertical: Vertical | "all";
+  fileSize: string;
+}

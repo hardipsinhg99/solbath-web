@@ -1,0 +1,79 @@
+{
+  "kind": "collectionType",
+  "collectionName": "products",
+  "info": {
+    "singularName": "product",
+    "pluralName": "products",
+    "displayName": "Product",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "slug": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true
+    },
+    "vertical": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::vertical.vertical"
+    },
+    "category": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::category.category"
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "collection": {
+      "type": "string",
+      "required": true
+    },
+    "shortDescription": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "finishes": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.value-item"
+    },
+    "sizes": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.value-item"
+    },
+    "specs": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.spec-row"
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "isNew": {
+      "type": "boolean",
+      "default": false
+    },
+    "images": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": ["images"]
+    },
+    "tone": {
+      "type": "enumeration",
+      "enum": ["bath", "tile", "hardware", "lifestyle", "neutral", "dark"]
+    }
+  }
+}

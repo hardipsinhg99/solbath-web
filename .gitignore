@@ -39,3 +39,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# strapi cms (separate Node app in cms/)
+cms/node_modules
+cms/.tmp
+cms/build
+cms/dist
+cms/.strapi
+cms/.env

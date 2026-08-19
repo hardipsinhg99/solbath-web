@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "catalogs",
+  "info": {
+    "singularName": "catalog",
+    "pluralName": "catalogs",
+    "displayName": "Catalog",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "vertical": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::vertical.vertical"
+    },
+    "file": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["files"]
+    }
+  }
+}
