@@ -2,9 +2,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/ui/Container";
 import { Vertical } from "@/lib/types";
-import { getVerticalMeta, getCategory } from "@/lib/data/categories";
+import { getVerticalMeta, getCategory, getAllCategories } from "@/lib/data/categories";
 import { getProductsByCategory } from "@/lib/data/products";
 import { CategoryProductBrowser } from "@/components/product/CategoryProductBrowser";
+
+export async function generateStaticParams() {
+  const categories = await getAllCategories();
+  return categories.map((cat) => ({ vertical: cat.vertical, category: cat.slug }));
+}
 
 export async function generateMetadata({ params }: PageProps<"/[vertical]/[category]">) {
   const { vertical, category } = await params;

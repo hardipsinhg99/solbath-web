@@ -6,9 +6,14 @@ import { ProductGallery } from "@/components/product/ProductGallery";
 import { ProductActions } from "@/components/product/ProductActions";
 import { SpecTable } from "@/components/product/SpecTable";
 import { RelatedProducts } from "@/components/product/RelatedProducts";
-import { getProduct, getRelatedProducts } from "@/lib/data/products";
+import { getProduct, getRelatedProducts, getAllProductSlugs } from "@/lib/data/products";
 import { getVerticalMeta, getCategory } from "@/lib/data/categories";
 import { getSiteSettings } from "@/lib/data/site";
+
+export async function generateStaticParams() {
+  const products = await getAllProductSlugs();
+  return products.map((p) => ({ slug: p.slug }));
+}
 
 export async function generateMetadata({ params }: PageProps<"/product/[slug]">) {
   const { slug } = await params;

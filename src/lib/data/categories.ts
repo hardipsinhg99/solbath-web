@@ -70,3 +70,12 @@ export async function getCategory(
   );
   return data[0] ? toCategory(data[0]) : undefined;
 }
+
+export async function getAllCategories(): Promise<Category[]> {
+  const data = await strapiList<StrapiCategory>(
+    "/api/categories?filters[isActive][$eq]=true&sort=sortOrder" +
+      "&populate[vertical][fields][0]=key&populate[filters][populate]=options&pagination[pageSize]=100",
+    ["categories"],
+  );
+  return data.map(toCategory);
+}

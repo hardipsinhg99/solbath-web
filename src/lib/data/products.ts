@@ -76,6 +76,14 @@ export async function getProduct(slug: string): Promise<Product | undefined> {
   return data[0] ? toProduct(data[0]) : undefined;
 }
 
+export async function getAllProductSlugs(): Promise<{ slug: string }[]> {
+  const data = await strapiList<{ slug: string }>(
+    "/api/products?fields[0]=slug&pagination[pageSize]=200",
+    ["products"],
+  );
+  return data.map((p) => ({ slug: p.slug }));
+}
+
 export async function getRelatedProducts(product: Product, count = 4): Promise<Product[]> {
   const data = await strapiList<StrapiProduct>(
     `/api/products?filters[category][slug][$eq]=${product.categorySlug}&filters[slug][$ne]=${product.slug}` +

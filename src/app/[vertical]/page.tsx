@@ -10,6 +10,11 @@ import { Vertical } from "@/lib/types";
 import { getVerticalMeta, getCategoriesByVertical } from "@/lib/data/categories";
 import { getProductsByVertical } from "@/lib/data/products";
 
+export async function generateStaticParams() {
+  const verticalMeta = await getVerticalMeta();
+  return Object.keys(verticalMeta).map((vertical) => ({ vertical }));
+}
+
 export async function generateMetadata({ params }: PageProps<"/[vertical]">) {
   const { vertical } = await params;
   const verticalMeta = await getVerticalMeta();
