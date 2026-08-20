@@ -7,5 +7,7 @@ export const catalogs: Catalog[] = [
   { id: "c4", title: "Large Format Slabs Technical Guide", vertical: "ceramic-tiles", fileSize: "6.1 MB" },
   { id: "c5", title: "Hardware — Full Catalogue 2026", vertical: "hardware", fileSize: "12.8 MB" },
   { id: "c6", title: "Door & Cabinet Hardware Price List", vertical: "hardware", fileSize: "2.3 MB" },
-  { id: "c7", title: "SolBath Brand Book & Company Profile", vertical: "all", fileSize: "4.7 MB" },
+  { id: "c7", title: "Kitchen — Full Catalogue 2026", vertical: "kitchen", fileSize: "15.4 MB" },
+  { id: "c8", title: "Kitchen Sinks, Surfaces & Storage Guide", vertical: "kitchen", fileSize: "7.8 MB" },
+  { id: "c9", title: "SolBath Brand Book & Company Profile", vertical: "all", fileSize: "4.7 MB" },
 ];

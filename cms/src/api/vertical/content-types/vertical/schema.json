@@ -5,7 +5,7 @@
     "singularName": "vertical",
     "pluralName": "verticals",
     "displayName": "Vertical",
-    "description": "The 3 fixed top-level verticals — hero copy for vertical landing pages."
+    "description": "The top-level verticals — hero copy for vertical landing pages."
   },
   "options": {
     "draftAndPublish": false
@@ -14,7 +14,7 @@
   "attributes": {
     "key": {
       "type": "enumeration",
-      "enum": ["bathroom-accessories", "ceramic-tiles", "hardware"],
+      "enum": ["bathroom-accessories", "ceramic-tiles", "hardware", "kitchen"],
       "required": true,
       "unique": true
     },
@@ -36,12 +36,26 @@
     },
     "tone": {
       "type": "enumeration",
-      "enum": ["bath", "tile", "hardware"]
+      "enum": ["bath", "tile", "hardware", "kitchen"]
     },
     "heroImage": {
       "type": "media",
       "multiple": false,
       "allowedTypes": ["images"]
+    },
+    "sortOrder": {
+      "type": "integer",
+      "default": 0
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": true
+    },
+    "seoTitle": {
+      "type": "string"
+    },
+    "seoDescription": {
+      "type": "text"
     }
   }
 }

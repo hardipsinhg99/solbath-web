@@ -45,7 +45,15 @@
     },
     "tone": {
       "type": "enumeration",
-      "enum": ["bath", "tile", "hardware", "lifestyle", "neutral", "dark"]
+      "enum": ["bath", "tile", "hardware", "kitchen", "lifestyle", "neutral", "dark"]
+    },
+    "sortOrder": {
+      "type": "integer",
+      "default": 0
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": true
     }
   }
 }

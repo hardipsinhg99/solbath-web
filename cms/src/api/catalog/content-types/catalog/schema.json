@@ -25,6 +25,14 @@
       "type": "media",
       "multiple": false,
       "allowedTypes": ["files"]
+    },
+    "sortOrder": {
+      "type": "integer",
+      "default": 0
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": true
     }
   }
 }

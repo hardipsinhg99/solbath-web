@@ -9,7 +9,7 @@ export const dealers: Dealer[] = [
     address: "SG Highway, Ahmedabad, Gujarat 380015",
     phone: "+91 98765 43210",
     rating: 4.8,
-    categories: ["bathroom-accessories", "ceramic-tiles", "hardware"],
+    categories: ["bathroom-accessories", "ceramic-tiles", "hardware", "kitchen"],
   },
   {
     id: "d2",
@@ -19,7 +19,7 @@ export const dealers: Dealer[] = [
     address: "Ring Road, Surat, Gujarat 395002",
     phone: "+91 98765 11223",
     rating: 4.6,
-    categories: ["bathroom-accessories", "ceramic-tiles"],
+    categories: ["bathroom-accessories", "ceramic-tiles", "kitchen"],
   },
   {
     id: "d3",
@@ -39,7 +39,7 @@ export const dealers: Dealer[] = [
     address: "Andheri West, Mumbai, Maharashtra 400058",
     phone: "+91 98765 55667",
     rating: 4.7,
-    categories: ["bathroom-accessories", "ceramic-tiles", "hardware"],
+    categories: ["bathroom-accessories", "ceramic-tiles", "hardware", "kitchen"],
   },
   {
     id: "d5",
