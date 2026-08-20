@@ -1,9 +1,11 @@
 import { Star } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { testimonials } from "@/lib/data/testimonials";
+import { getTestimonials } from "@/lib/data/testimonials";
 
-export function Testimonials() {
+export async function Testimonials() {
+  const testimonials = await getTestimonials();
+
   return (
     <section className="bg-navy py-20 sm:py-28">
       <Container>

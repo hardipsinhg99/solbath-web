@@ -1,71 +1,40 @@
-import { Dealer } from "@/lib/types";
+import { strapiList } from "@/lib/cms/client";
+import { Dealer, Vertical } from "@/lib/types";
 
-export const dealers: Dealer[] = [
-  {
-    id: "d1",
-    name: "SolBath Experience Studio",
-    city: "Ahmedabad",
-    state: "Gujarat",
-    address: "SG Highway, Ahmedabad, Gujarat 380015",
-    phone: "+91 98765 43210",
-    rating: 4.8,
-    categories: ["bathroom-accessories", "ceramic-tiles", "hardware", "kitchen"],
-  },
-  {
-    id: "d2",
-    name: "Prestige Sanitation & Tiles",
-    city: "Surat",
-    state: "Gujarat",
-    address: "Ring Road, Surat, Gujarat 395002",
-    phone: "+91 98765 11223",
-    rating: 4.6,
-    categories: ["bathroom-accessories", "ceramic-tiles", "kitchen"],
-  },
-  {
-    id: "d3",
-    name: "Metro Hardware House",
-    city: "Vadodara",
-    state: "Gujarat",
-    address: "Alkapuri, Vadodara, Gujarat 390007",
-    phone: "+91 98765 33445",
-    rating: 4.5,
-    categories: ["hardware"],
-  },
-  {
-    id: "d4",
-    name: "Urban Bath Gallery",
-    city: "Mumbai",
-    state: "Maharashtra",
-    address: "Andheri West, Mumbai, Maharashtra 400058",
-    phone: "+91 98765 55667",
-    rating: 4.7,
-    categories: ["bathroom-accessories", "ceramic-tiles", "hardware", "kitchen"],
-  },
-  {
-    id: "d5",
-    name: "Capstone Tiles Emporium",
-    city: "Pune",
-    state: "Maharashtra",
-    address: "Baner Road, Pune, Maharashtra 411045",
-    phone: "+91 98765 77889",
-    rating: 4.4,
-    categories: ["ceramic-tiles"],
-  },
-  {
-    id: "d6",
-    name: "Regal Fittings Co.",
-    city: "Rajkot",
-    state: "Gujarat",
-    address: "150 Feet Ring Road, Rajkot, Gujarat 360005",
-    phone: "+91 98765 99001",
-    rating: 4.6,
-    categories: ["bathroom-accessories", "hardware"],
-  },
-];
+interface StrapiDealer {
+  documentId: string;
+  name: string;
+  city: string;
+  state: string;
+  address: string;
+  phone: string;
+  rating: number | null;
+  categories: { key: Vertical }[];
+}
 
-export function getDealersByCity(city?: string) {
+function toDealer(raw: StrapiDealer): Dealer {
+  return {
+    id: raw.documentId,
+    name: raw.name,
+    city: raw.city,
+    state: raw.state,
+    address: raw.address,
+    phone: raw.phone,
+    rating: raw.rating ?? 0,
+    categories: raw.categories.map((c) => c.key),
+  };
+}
+
+export async function getDealers(): Promise<Dealer[]> {
+  const data = await strapiList<StrapiDealer>(
+    "/api/dealers?populate[categories][fields][0]=key&sort=name&pagination[pageSize]=200",
+    ["dealers"],
+  );
+  return data.map(toDealer);
+}
+
+export async function getDealersByCity(city?: string): Promise<Dealer[]> {
+  const dealers = await getDealers();
   if (!city) return dealers;
   return dealers.filter((d) => d.city.toLowerCase() === city.toLowerCase());
 }
-
-export const dealerCities = Array.from(new Set(dealers.map((d) => d.city))).sort();

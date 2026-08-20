@@ -3,14 +3,16 @@
 import { useMemo, useState } from "react";
 import { MapPin, Phone, Star, Navigation } from "lucide-react";
 import { Dealer } from "@/lib/types";
-import { verticalMeta } from "@/lib/data/categories";
+import { VerticalMeta } from "@/lib/data/categories";
 
 export function DealerLocator({
   dealers,
   cities,
+  verticalMeta,
 }: {
   dealers: Dealer[];
   cities: string[];
+  verticalMeta: VerticalMeta;
 }) {
   const [city, setCity] = useState("all");
 

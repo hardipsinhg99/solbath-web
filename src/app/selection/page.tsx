@@ -1,13 +1,16 @@
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { SelectionList } from "@/components/selection/SelectionList";
+import { getSiteSettings } from "@/lib/data/site";
 
 export const metadata = {
   title: "My Selection",
   description: "Products you've shortlisted for a quote.",
 };
 
-export default function SelectionPage() {
+export default async function SelectionPage() {
+  const site = await getSiteSettings();
+
   return (
     <div className="py-14 sm:py-20">
       <Container>
@@ -17,7 +20,7 @@ export default function SelectionPage() {
           description="Review your selection, then submit it as a single quote request or share it with our team on WhatsApp."
         />
         <div className="mt-12 max-w-2xl">
-          <SelectionList />
+          <SelectionList whatsappNumber={site.whatsappNumber} />
         </div>
       </Container>
     </div>

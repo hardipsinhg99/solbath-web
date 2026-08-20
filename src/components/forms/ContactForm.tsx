@@ -1,18 +1,16 @@
 "use client";
 
-import { FormEvent, useState } from "react";
-import { CheckCircle2 } from "lucide-react";
+import { useActionState } from "react";
+import { CheckCircle2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { submitContactAction, type ContactActionState } from "@/lib/actions/contact";
+
+const initialState: ContactActionState = { status: "idle" };
 
 export function ContactForm() {
-  const [submitted, setSubmitted] = useState(false);
+  const [state, formAction, isPending] = useActionState(submitContactAction, initialState);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setSubmitted(true);
-  };
-
-  if (submitted) {
+  if (state.status === "success") {
     return (
       <div className="flex flex-col items-start gap-3 rounded-none border border-success/30 bg-success/5 p-8">
         <CheckCircle2 size={28} className="text-success" />
@@ -26,7 +24,7 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
+    <form action={formAction} className="space-y-5">
       <div className="grid gap-5 sm:grid-cols-2">
         <Field label="Full Name" name="name" required />
         <Field label="Phone Number" name="phone" type="tel" required />
@@ -45,8 +43,15 @@ export function ContactForm() {
           placeholder="Tell us a bit about what you're looking for..."
         />
       </div>
-      <Button type="submit" size="lg" className="w-full sm:w-auto">
-        Send Message
+
+      {state.status === "error" ? (
+        <p className="flex items-start gap-2 text-sm text-error">
+          <AlertCircle size={16} className="mt-0.5 shrink-0" /> {state.error}
+        </p>
+      ) : null}
+
+      <Button type="submit" size="lg" className="w-full sm:w-auto" disabled={isPending}>
+        {isPending ? "Sending..." : "Send Message"}
       </Button>
     </form>
   );

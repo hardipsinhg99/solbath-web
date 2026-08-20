@@ -7,23 +7,28 @@ import { ProductActions } from "@/components/product/ProductActions";
 import { SpecTable } from "@/components/product/SpecTable";
 import { RelatedProducts } from "@/components/product/RelatedProducts";
 import { getProduct, getRelatedProducts } from "@/lib/data/products";
-import { verticalMeta, getCategory } from "@/lib/data/categories";
+import { getVerticalMeta, getCategory } from "@/lib/data/categories";
+import { getSiteSettings } from "@/lib/data/site";
 
 export async function generateMetadata({ params }: PageProps<"/product/[slug]">) {
   const { slug } = await params;
-  const product = getProduct(slug);
+  const product = await getProduct(slug);
   if (!product) return {};
   return { title: product.name, description: product.shortDescription };
 }
 
 export default async function ProductPage({ params }: PageProps<"/product/[slug]">) {
   const { slug } = await params;
-  const product = getProduct(slug);
+  const product = await getProduct(slug);
   if (!product) notFound();
 
+  const [verticalMeta, category, related, site] = await Promise.all([
+    getVerticalMeta(),
+    getCategory(product.vertical, product.categorySlug),
+    getRelatedProducts(product),
+    getSiteSettings(),
+  ]);
   const meta = verticalMeta[product.vertical];
-  const category = getCategory(product.vertical, product.categorySlug);
-  const related = getRelatedProducts(product);
 
   return (
     <div>
@@ -59,7 +64,7 @@ export default async function ProductPage({ params }: PageProps<"/product/[slug]
               <p className="mt-4 text-base leading-relaxed text-ink-soft">{product.description}</p>
 
               <div className="mt-8 border-t border-border pt-8">
-                <ProductActions product={product} />
+                <ProductActions product={product} whatsappNumber={site.whatsappNumber} />
               </div>
             </div>
           </div>

@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/Button";
 import { ProductCard } from "@/components/product/ProductCard";
 import { getFeaturedProducts } from "@/lib/data/products";
 
-export function FeaturedProducts() {
-  const featured = getFeaturedProducts();
+export async function FeaturedProducts() {
+  const featured = await getFeaturedProducts();
 
   return (
     <section className="py-20 sm:py-28">

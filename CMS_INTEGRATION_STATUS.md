@@ -3,124 +3,137 @@
 Last updated: 2026-08-20. Written so this can be revisited without re-deriving it from
 conversation history. If you're picking this back up later, read this whole file first.
 
+## Current state: integration complete on this branch (`strapi`)
+
+`strapi` is now the integration branch. Master's frontend work (flipbook viewer, WhatsApp
+icon fix, Kitchen vertical, header mega-menu animation) has been merged in, the Kitchen
+vertical sync into the Strapi schema/seed-data has been finished and verified, and the
+frontend has been fully rewired to fetch from the live Strapi backend instead of the old
+static `src/lib/data/*.ts` arrays. Every checklist item below is done and was verified
+against the actual running Postgres/MinIO/Strapi/Next.js stack, not just read in isolation.
+
 ## Branch map
 
-- **`master`** — the live/demo frontend. Fully static: every page reads from
-  `src/lib/data/*.ts` (hardcoded TS arrays), zero backend, zero network calls for
-  content. This is what's meant to be deployed to Vercel for client demos.
-  Recently added here (none of it exists on `strapi` yet — see "Branch drift" below):
-  - Catalogue flipbook viewer (`src/components/catalogs/FlipbookViewer.tsx` +
-    `CatalogViewButton.tsx`) — real PDF page-flip with sound, via `pdfjs-dist` +
-    `react-pageflip`. Uses one shared sample PDF (`public/catalogs/sample-catalog.pdf`)
-    for every catalogue entry, since no real per-catalogue PDFs exist yet.
-  - WhatsApp icon consistency fix — `QuoteForm.tsx`, `ProductActions.tsx`,
-    `SelectionList.tsx` now use the real `/whatsapp-current.png` logo instead of a
-    generic lucide `MessageCircle` icon, matching `WhatsAppButton.tsx`.
-  - A new **Kitchen** vertical: added to `src/lib/types.ts` (`Vertical`,
-    `PlaceholderTone`), `src/lib/data/categories.ts` (3 categories + verticalMeta
-    entry), `src/lib/data/products.ts` (9 products), `src/lib/data/catalogs.ts` (2
-    catalogue entries), `src/lib/data/dealers.ts` (added to 3 dealers' `categories`),
-    `src/lib/data/site.ts` (nav + tagline). Also new: `BackToTopButton.tsx`, an
-    updated `Hero.tsx`, and new placeholder images for kitchen.
-
-- **`strapi`** — the CMS backend. A standalone Strapi v5 app at `cms/` (own
-  package.json, not embedded in the Next.js process — see "Why Strapi, not Payload"
-  below). Fully built and independently verified working:
-  - Content-types: Vertical, Category, Product, Dealer, Testimonial,
-    InspirationPost, Catalog, ContactSubmission, QuoteSubmission (all Collection
-    Types) + SiteSettings (Single Type). Shared components:
-    `shared.value-item`/`spec-row`/`filter-group`/`nav-item`/`social-links`.
-  - MinIO (S3-compatible, self-hosted via `docker-compose.yml` at repo root) wired
-    as the upload provider — verified end-to-end (upload → stored in MinIO →
-    publicly downloadable URL).
-  - Public role permissions seeded idempotently via `cms/src/index.ts` bootstrap:
-    public `find`/`findOne` on content types, public-`create`-only (no `find`) on
-    ContactSubmission/QuoteSubmission so they're a write-only lead inbox.
-  - Seed data at `cms/seed-data/*.ts` — **a deliberate point-in-time copy** of the
-    original static data (kept separate from `src/lib/data/*.ts` on purpose, so the
-    seed script has a stable source once the frontend files get rewritten to fetch
-    from Strapi instead).
-  - **Kitchen vertical was just synced into this branch's schema + seed-data** (in
-    an isolated git worktree at `../solbath-web-strapi`, not yet merged back — see
-    "Immediate next steps" below): added `"kitchen"` to the `Vertical.key` and
-    `Vertical.tone`/`Product.tone` enums (the `Product.tone` gap would have made
-    seeding kitchen products fail outright), plus new `sortOrder`/`isActive`
-    fields on Vertical/Category/Catalog and `seoTitle`/`seoDescription` on
-    Vertical, requested via a staging folder the user created
-    (`cms-seed-data-staging/` on `master`).
-  - **NOT yet done on this branch**: `cms/scripts/seed.ts` doesn't write the new
-    `sortOrder`/`isActive` fields yet, Strapi types haven't been regenerated, and
-    the updated seed hasn't been run against the actual database yet.
-
+- **`strapi`** (this branch) — the combined frontend + CMS integration branch. Contains:
+  - The Strapi v5 backend at `cms/` (own package.json, own node_modules — a standalone
+    Node/Koa server, not embedded in the Next.js process; integration is over HTTP).
+  - The full Next.js frontend, now wired to fetch from Strapi (see below) instead of
+    static arrays.
+- **`master`** — no longer the active integration branch. Its frontend work as of
+  2026-08-20 has been merged into `strapi`; further frontend work should happen here on
+  `strapi` going forward so it stays wired to the CMS.
 - **`payload`** — an earlier, fully abandoned attempt using Payload CMS instead of
   Strapi. Kept only for reference. Do not build on this branch.
 
 ## Why Strapi, not Payload
 
-Payload was tried first (embedded directly in the Next.js process). The user
-decided against it in favor of Strapi as the more mainstream/battle-tested option.
-Key architectural difference: **Strapi cannot embed in the Next.js process** — it's
-its own standalone Node/Koa server, own admin panel, own database. Integration is
-over HTTP (REST API), not a Local API shortcut.
+Payload was tried first (embedded directly in the Next.js process). The user decided
+against it in favor of Strapi as the more mainstream/battle-tested option. Key
+architectural difference: **Strapi cannot embed in the Next.js process** — it's its own
+standalone Node/Koa server, own admin panel, own database. Integration is over HTTP
+(REST API), not a Local API shortcut.
 
-## Branch drift problem (unresolved, blocks integration)
+## Strapi backend
 
-`strapi` was forked from `master` **before** the flipbook viewer, the WhatsApp icon
-fix, the Kitchen vertical, and other recent frontend work. If the FE→Strapi
-data-fetching layer gets built directly on `strapi` as originally planned, it would
-wire Strapi into an **older snapshot of the frontend** — shipping that would mean
-losing everything added to `master` since the fork.
+- Content-types: Vertical, Category, Product, Dealer, Testimonial, InspirationPost,
+  Catalog, ContactSubmission, QuoteSubmission (all Collection Types) + SiteSettings
+  (Single Type). Shared components: `shared.value-item`/`spec-row`/`filter-group`/
+  `nav-item`/`social-links`.
+- Kitchen vertical is fully synced: `"kitchen"` in the `Vertical.key`/`Vertical.tone`/
+  `Product.tone`/`Category.tone`/`InspirationPost.tone` enums, plus `sortOrder`/
+  `isActive` on Vertical/Category/Product(sortOrder only)/Catalog and `seoTitle`/
+  `seoDescription` on Vertical. `cms/scripts/seed.ts` writes these fields on both create
+  **and** update, so re-running the seed backfills them onto pre-existing records too
+  (verified: 4 verticals, 12 categories, 36 products, 9 catalogs, 6 dealers — 3 with
+  Kitchen linked — all with `sortOrder`/`isActive` populated, no duplicates).
+- MinIO (S3-compatible, self-hosted via `docker-compose.yml` at repo root) wired as the
+  upload provider. No real product/catalogue files have been uploaded yet — that's a
+  content task for whoever has Strapi admin access, not a code task.
+- Public role permissions + a Next.js revalidation webhook are both seeded idempotently
+  via `cms/src/index.ts`'s `bootstrap()`: public `find`/`findOne` on content types,
+  public-`create`-only on ContactSubmission/QuoteSubmission (write-only lead inbox), and
+  a `"Next.js revalidation"` webhook pointed at `${FRONTEND_URL}/api/revalidate` firing
+  on entry create/update/delete/publish/unpublish. `cms/.env`'s `FRONTEND_URL` must match
+  wherever the Next app actually runs (defaults to `http://localhost:3000`).
 
-This needs a decision before frontend integration starts:
-1. **Merge/rebase `master`'s latest frontend work into `strapi`**, then build the
-   Strapi data-fetching layer on top of the combined state (leaning towards this
-   one — keeps the CMS work isolated until it's ready), or
-2. Treat `master` as the integration branch going forward instead.
+## Frontend: fetches from Strapi instead of static arrays
 
-Not yet decided as of this writing.
+- `src/lib/cms/client.ts` — the shared fetch layer (`strapiFetch`/`strapiList`/
+  `strapiSingle`/`mediaUrl`/`mediaSizeLabel`). Every request is tagged `"strapi"` plus a
+  content-type-specific tag (e.g. `"products"`, `"categories:kitchen"`) and cached for an
+  hour as a fallback, with on-demand revalidation doing the real work (see below).
+- `src/lib/data/*.ts` — every file now fetches from Strapi. Function *names* were kept
+  identical wherever they existed (`getProduct`, `getCategoriesByVertical`,
+  `getFeaturedProducts`, etc.) — they're just `async` now. Raw array exports that had no
+  external consumer (`products`, `categories`, `catalogs`, `testimonials`, `posts`) were
+  dropped entirely in favor of their existing getter functions; raw exports that *did*
+  have consumers were replaced with async equivalents (`site` → `getSiteSettings()`,
+  `dealers`/`dealerCities` → `getDealers()` with cities derived inline in
+  `app/dealers/page.tsx`, `verticalMeta` → `getVerticalMeta()`).
+- `whatsappLink(message, whatsappNumber)` — signature changed to accept the number as a
+  parameter (was previously reading a module-level `site` constant). Necessary because
+  it's called from Client Components (`QuoteForm`, `ProductActions`, `SelectionList`),
+  which can't `await` a Strapi fetch themselves — their Server Component parent pages
+  fetch `getSiteSettings()` and pass `whatsappNumber` down as a prop instead.
+- **Header split** (exactly as planned): `Header.tsx` is now an async Server Component
+  that fetches site settings, vertical metadata, and — per vertical — categories and
+  "popular" products for the mega menu, then passes it all down as a fully-resolved
+  `MegaMenuVerticalItem[]` prop. `HeaderClient.tsx` (new) holds all the interactivity
+  (`useState`/`usePathname`/`useSelection`) and receives that data as props.
+  `ProductsMegaMenu.tsx` is now purely presentational — it no longer imports anything
+  from `@/lib/data/*`, it just renders whatever `verticals` prop it's given.
+- Similarly, `CategoryShowcase.tsx` (had the same module-scope-import antipattern as
+  Header) is now an async Server Component fetching `getVerticalMeta()` instead of
+  spreading it at module scope. `DealerLocator.tsx` (Client) now receives `verticalMeta`
+  as a prop from `dealers/page.tsx` instead of importing it directly.
+- **Forms wired to real Server Actions**: `src/lib/actions/contact.ts` and
+  `src/lib/actions/quote.ts` (`"use server"`) POST to Strapi's `contact-submissions`/
+  `quote-submissions` endpoints. `ContactForm.tsx`/`QuoteForm.tsx` use React's
+  `useActionState` instead of a fake `handleSubmit` that only flipped local state.
+  **Fixed the pre-existing bug** where `persona` was tracked in `QuoteForm`'s local state
+  but never actually submitted anywhere — it's now sent as a hidden form field and lands
+  in Strapi correctly (verified via an actual submission with `persona: "architect"`).
+- **Revalidation**: `src/app/api/revalidate/route.ts` — a Route Handler that checks an
+  `x-revalidate-secret` header against `REVALIDATE_SECRET`, maps the webhook payload's
+  `model` to the matching cache tag, and calls `revalidateTag(tag, { expire: 0 })` (the
+  immediate-expiry form — Next 16 deprecated the single-argument call; `{ expire: 0 }` is
+  the documented replacement for "external system needs this to expire right now").
+  **Verified end-to-end**: edited a product's name directly in Strapi, confirmed the
+  webhook fired and the very next request to that product's page showed the new name,
+  with zero redeploy and zero manual cache-busting — then reverted the test edit.
+- **Catalogues**: `getCatalogs()` maps Strapi's `catalog.file` media relation straight to
+  `Catalog.fileUrl`/`fileSize` — no per-component changes were needed, since
+  `CatalogViewButton`/`FlipbookViewer`/the catalogues page were already written to take a
+  `fileUrl` prop and treat it as optional. Every catalogue's `fileUrl` is currently
+  `undefined` because no real PDFs have been uploaded to Strapi yet (`fileSize` falls
+  back to `"Pending upload"`) — once someone uploads a file to a Catalog record in the
+  Strapi admin, its real URL and size will appear on the site automatically, no code
+  change required.
+- `next.config.ts` — added `images.remotePatterns` for `localhost:1337`/`:9000` (Strapi's
+  own uploads path and the MinIO bucket) so `next/image` will accept real media URLs once
+  they exist; add the production media host here too when deploying.
 
-## What "full FE+Strapi integration" requires (none of this exists yet)
+## Verified
 
-- [ ] Rewrite `src/lib/data/*.ts` to fetch from Strapi's REST API instead of the
-      static arrays — keep the same exported function names/signatures so most
-      call sites only need `await` added.
-- [ ] Split `src/components/layout/Header.tsx` into a Server Component (does the
-      Strapi fetch for the mega-menu's categories + popular products) + a Client
-      Component (keeps `useState`/`usePathname`/`useSelection` interactivity) — it
-      currently fetches data synchronously in a Client Component, which breaks once
-      that data is a network call.
-- [ ] Wire `ContactForm.tsx`/`QuoteForm.tsx` to real Server Actions posting to
-      Strapi's `contact-submissions`/`quote-submissions` endpoints (`QuoteForm` also
-      needs to start actually sending `persona` in the payload — it's tracked in
-      local state today but never submitted anywhere, a pre-existing bug unrelated
-      to Strapi).
-- [ ] Revalidation: a Strapi webhook → a new Next.js route handler → `revalidateTag`,
-      so editing content in Strapi actually updates the live site without a
-      redeploy.
-- [ ] Point `FlipbookViewer`/`CatalogViewButton` at each catalogue's real
-      Strapi-hosted file instead of the one shared sample PDF.
-- [ ] End-to-end verification that every page still renders correctly against live
-      Strapi data (not just that Strapi returns data in isolation).
+- Full `tsc --noEmit` and `eslint .` pass clean across the whole worktree.
+- Every route in the app (`/`, both vertical/category levels, product detail,
+  inspiration list/detail, catalogues, dealers, contact, quote, selection, about,
+  for-trade) loads with zero console/page errors, driven entirely by live Strapi data.
+- The header mega-menu (GSAP hover animation) works identically with server-fetched data
+  flowing through the Server→Client split.
+- Both `ContactForm` and `QuoteForm` were submitted through the real UI; both landed
+  correctly in Strapi (and the persona bug fix was confirmed in the same pass).
+- The revalidation webhook was proven end-to-end, not just unit-tested in isolation.
 
-**Bottom line: not ready to go live with FE+Strapi integration.** The backend is
-solid and independently verified; the frontend has zero wiring to it yet, and the
-branch-drift problem above needs resolving first.
+## What's left (content/ops, not code)
 
-## Immediate next steps (in-flight, not finished)
-
-Currently working in an isolated git worktree at `../solbath-web-strapi` (checked
-out to `strapi`, `npm install` already done there) syncing the Kitchen vertical
-into the Strapi schema/seed-data — this is backend-only syncing, not frontend
-integration. Remaining to finish that specific task:
-1. Update `cms/scripts/seed.ts` to write `sortOrder`/`isActive` on
-   Vertical/Category/Product/Catalog (for both the original content and the new
-   Kitchen entries).
-2. Regenerate Strapi TS types (`npm run generate:types` equivalent) in the
-   worktree.
-3. Boot Strapi in the worktree and run the updated seed script against the
-   existing Postgres/MinIO containers (already running, data intact).
-4. Verify: Kitchen vertical/categories/products/catalogues appear correctly in the
-   Strapi admin, existing content wasn't duplicated, `sortOrder`/`isActive` are
-   populated.
-5. Decide what to do with the worktree's changes (merge into `strapi` branch, or
-   fold into whatever the branch-drift decision above produces).
+- Upload real per-product images and per-catalogue PDFs through the Strapi admin —
+  `Product.images`/`Category.image`/`Catalog.file` all exist on the schema and the
+  frontend is ready to use them (catalogues automatically will; products/categories
+  still render the procedural `Placeholder` component since no code currently prefers a
+  real image over it — wiring that in is a small follow-up if/when real product photos
+  exist, not attempted here since there was nothing to point it at yet).
+- Decide on a production `FRONTEND_URL`/Strapi host and add the production media
+  domain to `next.config.ts`'s `remotePatterns` before deploying.
+- `CatalogDownloadButton.tsx` is still a placeholder ("Available after CMS setup") —
+  wire it to the real file URL once catalogue PDFs exist.

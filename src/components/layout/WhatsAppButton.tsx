@@ -1,10 +1,15 @@
 import Image from "next/image";
-import { whatsappLink } from "@/lib/data/site";
+import { getSiteSettings, whatsappLink } from "@/lib/data/site";
 
-export function WhatsAppButton() {
+export async function WhatsAppButton() {
+  const site = await getSiteSettings();
+
   return (
     <a
-      href={whatsappLink("Hi SolBath, I'd like to know more about your products.")}
+      href={whatsappLink(
+        "Hi SolBath, I'd like to know more about your products.",
+        site.whatsappNumber,
+      )}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat with us on WhatsApp"

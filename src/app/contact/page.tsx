@@ -3,14 +3,16 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ContactForm } from "@/components/forms/ContactForm";
 import { Placeholder } from "@/components/ui/Placeholder";
-import { site } from "@/lib/data/site";
+import { getSiteSettings } from "@/lib/data/site";
 
 export const metadata = {
   title: "Contact Us",
   description: "Get in touch with the SolBath team.",
 };
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const site = await getSiteSettings();
+
   return (
     <div className="py-14 sm:py-20">
       <Container>

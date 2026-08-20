@@ -2,13 +2,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/ui/Container";
 import { Placeholder } from "@/components/ui/Placeholder";
-import { getPost, posts } from "@/lib/data/posts";
+import { getPost, getPosts } from "@/lib/data/posts";
 import { getProduct } from "@/lib/data/products";
 import { ProductCard } from "@/components/product/ProductCard";
 
 export async function generateMetadata({ params }: PageProps<"/inspiration/[slug]">) {
   const { slug } = await params;
-  const post = getPost(slug);
+  const post = await getPost(slug);
   if (!post) return {};
   return { title: post.title, description: post.excerpt };
 }
@@ -17,14 +17,18 @@ export default async function InspirationDetailPage({
   params,
 }: PageProps<"/inspiration/[slug]">) {
   const { slug } = await params;
-  const post = getPost(slug);
+  const post = await getPost(slug);
   if (!post) notFound();
 
-  const relatedProducts = post.relatedProductSlugs
-    .map((s) => getProduct(s))
-    .filter((p): p is NonNullable<typeof p> => Boolean(p));
+  const [relatedProductsRaw, allPosts] = await Promise.all([
+    Promise.all(post.relatedProductSlugs.map((s) => getProduct(s))),
+    getPosts(),
+  ]);
+  const relatedProducts = relatedProductsRaw.filter((p): p is NonNullable<typeof p> =>
+    Boolean(p),
+  );
 
-  const morePosts = posts.filter((p) => p.slug !== post.slug).slice(0, 3);
+  const morePosts = allPosts.filter((p) => p.slug !== post.slug).slice(0, 3);
 
   return (
     <div className="py-10 sm:py-14">

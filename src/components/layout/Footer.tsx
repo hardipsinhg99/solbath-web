@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Phone, Mail } from "lucide-react";
 import { Container } from "@/components/ui/Container";
-import { site } from "@/lib/data/site";
+import { getSiteSettings } from "@/lib/data/site";
 import { InstagramIcon, FacebookIcon, YoutubeIcon } from "@/components/ui/SocialIcons";
 
 const columns = [
@@ -35,7 +35,9 @@ const columns = [
   },
 ];
 
-export function Footer() {
+export async function Footer() {
+  const site = await getSiteSettings();
+
   return (
     <footer className="border-t border-border bg-navy text-white/80">
       <Container className="grid gap-12 py-16 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">

@@ -3,15 +3,17 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { CatalogDownloadButton } from "@/components/catalogs/CatalogDownloadButton";
 import { CatalogViewButton } from "@/components/catalogs/CatalogViewButton";
-import { catalogs } from "@/lib/data/catalogs";
-import { verticalMeta } from "@/lib/data/categories";
+import { getCatalogs } from "@/lib/data/catalogs";
+import { getVerticalMeta } from "@/lib/data/categories";
 
 export const metadata = {
   title: "Download Catalogues",
   description: "Download SolBath product catalogues by category.",
 };
 
-export default function CataloguesPage() {
+export default async function CataloguesPage() {
+  const [catalogs, verticalMeta] = await Promise.all([getCatalogs(), getVerticalMeta()]);
+
   return (
     <div className="py-14 sm:py-20">
       <Container>

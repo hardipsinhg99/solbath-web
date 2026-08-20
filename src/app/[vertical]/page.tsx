@@ -6,23 +6,29 @@ import { Placeholder } from "@/components/ui/Placeholder";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
 import { ProductCard } from "@/components/product/ProductCard";
-import { verticalMeta, getCategoriesByVertical } from "@/lib/data/categories";
+import { Vertical } from "@/lib/types";
+import { getVerticalMeta, getCategoriesByVertical } from "@/lib/data/categories";
 import { getProductsByVertical } from "@/lib/data/products";
 
 export async function generateMetadata({ params }: PageProps<"/[vertical]">) {
   const { vertical } = await params;
-  const meta = verticalMeta[vertical];
+  const verticalMeta = await getVerticalMeta();
+  const meta = verticalMeta[vertical as Vertical];
   if (!meta) return {};
   return { title: meta.name, description: meta.tagline };
 }
 
 export default async function VerticalPage({ params }: PageProps<"/[vertical]">) {
   const { vertical } = await params;
-  const meta = verticalMeta[vertical];
+  const verticalMeta = await getVerticalMeta();
+  const meta = verticalMeta[vertical as Vertical];
   if (!meta) notFound();
 
-  const subcategories = getCategoriesByVertical(vertical);
-  const productsInVertical = getProductsByVertical(vertical).slice(0, 6);
+  const [subcategories, allProductsInVertical] = await Promise.all([
+    getCategoriesByVertical(vertical as Vertical),
+    getProductsByVertical(vertical as Vertical),
+  ]);
+  const productsInVertical = allProductsInVertical.slice(0, 6);
 
   return (
     <>

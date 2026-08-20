@@ -2,14 +2,16 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Placeholder } from "@/components/ui/Placeholder";
-import { posts } from "@/lib/data/posts";
+import { getPosts } from "@/lib/data/posts";
 
 export const metadata = {
   title: "Inspiration",
   description: "Ideas, guides and room stories from the SolBath design desk.",
 };
 
-export default function InspirationPage() {
+export default async function InspirationPage() {
+  const posts = await getPosts();
+
   return (
     <div className="py-14 sm:py-20">
       <Container>

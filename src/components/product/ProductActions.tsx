@@ -9,7 +9,13 @@ import { useSelection } from "@/components/selection-context";
 import { Product } from "@/lib/types";
 import { whatsappLink } from "@/lib/data/site";
 
-export function ProductActions({ product }: { product: Product }) {
+export function ProductActions({
+  product,
+  whatsappNumber,
+}: {
+  product: Product;
+  whatsappNumber: string;
+}) {
   const [finish, setFinish] = useState(product.finishes[0]);
   const { add, has } = useSelection();
   const added = has(product.slug);
@@ -77,7 +83,7 @@ export function ProductActions({ product }: { product: Product }) {
       </div>
 
       <a
-        href={whatsappLink(message)}
+        href={whatsappLink(message, whatsappNumber)}
         target="_blank"
         rel="noopener noreferrer"
         className="flex items-center gap-2 text-sm font-medium text-success hover:text-success/80"

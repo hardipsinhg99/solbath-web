@@ -2,28 +2,22 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Placeholder } from "@/components/ui/Placeholder";
-import { verticalMeta } from "@/lib/data/categories";
+import { getVerticalMeta } from "@/lib/data/categories";
 
-const items = [
-  {
-    ...verticalMeta["bathroom-accessories"],
-    description: "Faucets, showers and sanitaryware finished to a designer standard.",
-  },
-  {
-    ...verticalMeta["ceramic-tiles"],
-    description: "Floor, wall and large-format tiles in every texture and tone.",
-  },
-  {
-    ...verticalMeta.hardware,
-    description: "Door, cabinet and security hardware - the details that matter.",
-  },
-  {
-    ...verticalMeta.kitchen,
-    description: "Kitchen fittings, surfaces and storage for composed everyday use.",
-  },
-];
+const DESCRIPTIONS: Record<string, string> = {
+  "bathroom-accessories": "Faucets, showers and sanitaryware finished to a designer standard.",
+  "ceramic-tiles": "Floor, wall and large-format tiles in every texture and tone.",
+  hardware: "Door, cabinet and security hardware - the details that matter.",
+  kitchen: "Kitchen fittings, surfaces and storage for composed everyday use.",
+};
 
-export function CategoryShowcase() {
+export async function CategoryShowcase() {
+  const verticalMeta = await getVerticalMeta();
+  const items = Object.values(verticalMeta).map((meta) => ({
+    ...meta,
+    description: DESCRIPTIONS[meta.slug] ?? "",
+  }));
+
   return (
     <section className="py-20 sm:py-28">
       <Container>

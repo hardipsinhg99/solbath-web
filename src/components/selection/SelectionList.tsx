@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { useSelection } from "@/components/selection-context";
 import { whatsappLink } from "@/lib/data/site";
 
-export function SelectionList() {
+export function SelectionList({ whatsappNumber }: { whatsappNumber: string }) {
   const { items, remove, clear } = useSelection();
 
   if (items.length === 0) {
@@ -60,7 +60,7 @@ export function SelectionList() {
           Proceed to Quote Request
         </Button>
         <a
-          href={whatsappLink(summaryText)}
+          href={whatsappLink(summaryText, whatsappNumber)}
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-2 text-sm font-medium text-success hover:text-success/80"

@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/ui/Container";
-import { verticalMeta, getCategory } from "@/lib/data/categories";
+import { Vertical } from "@/lib/types";
+import { getVerticalMeta, getCategory } from "@/lib/data/categories";
 import { getProductsByCategory } from "@/lib/data/products";
 import { CategoryProductBrowser } from "@/components/product/CategoryProductBrowser";
 
 export async function generateMetadata({ params }: PageProps<"/[vertical]/[category]">) {
   const { vertical, category } = await params;
-  const cat = getCategory(vertical, category);
+  const cat = await getCategory(vertical as Vertical, category);
   if (!cat) return {};
   return { title: cat.name, description: cat.tagline };
 }
@@ -16,11 +17,14 @@ export default async function CategoryPage({
   params,
 }: PageProps<"/[vertical]/[category]">) {
   const { vertical, category } = await params;
-  const meta = verticalMeta[vertical];
-  const cat = getCategory(vertical, category);
+  const [verticalMeta, cat] = await Promise.all([
+    getVerticalMeta(),
+    getCategory(vertical as Vertical, category),
+  ]);
+  const meta = verticalMeta[vertical as Vertical];
   if (!meta || !cat) notFound();
 
-  const products = getProductsByCategory(vertical, category);
+  const products = await getProductsByCategory(vertical as Vertical, category);
 
   return (
     <div className="py-10 sm:py-14">

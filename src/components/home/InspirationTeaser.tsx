@@ -3,9 +3,11 @@ import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Placeholder } from "@/components/ui/Placeholder";
-import { posts } from "@/lib/data/posts";
+import { getPosts } from "@/lib/data/posts";
 
-export function InspirationTeaser() {
+export async function InspirationTeaser() {
+  const posts = await getPosts();
+
   return (
     <section className="py-20 sm:py-28">
       <Container>
