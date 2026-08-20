@@ -12,6 +12,7 @@ const columns = [
       { label: "Bathroom Accessories", href: "/bathroom-accessories" },
       { label: "Ceramic Tiles", href: "/ceramic-tiles" },
       { label: "Hardware", href: "/hardware" },
+      { label: "Kitchen", href: "/kitchen" },
       { label: "Inspiration", href: "/inspiration" },
     ],
   },
@@ -49,8 +50,8 @@ export function Footer() {
             />
           </Link>
           <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/60">
-            Bathroom accessories, ceramic tiles and hardware for homes and projects that
-            expect more from their surfaces and fittings.
+            Bathroom accessories, ceramic tiles, hardware and kitchen solutions for homes
+            and projects that expect more from every surface and fitting.
           </p>
           <div className="mt-6 space-y-2.5 text-sm text-white/70">
             <p className="flex items-start gap-2">
@@ -96,7 +97,7 @@ export function Footer() {
 
       <div className="border-t border-white/10">
         <Container className="flex flex-col items-center justify-between gap-3 py-6 text-xs text-white/45 sm:flex-row">
-          <p>© {new Date().getFullYear()} SolBath. All rights reserved.</p>
+          <p>Copyright {new Date().getFullYear()} SolBath. All rights reserved.</p>
           <div className="flex gap-6">
             <Link href="/privacy-policy" className="hover:text-white/70">
               Privacy Policy

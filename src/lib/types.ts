@@ -1,6 +1,13 @@
-export type Vertical = "bathroom-accessories" | "ceramic-tiles" | "hardware";
+export type Vertical = "bathroom-accessories" | "ceramic-tiles" | "hardware" | "kitchen";
 
-export type PlaceholderTone = "bath" | "tile" | "hardware" | "lifestyle" | "neutral" | "dark";
+export type PlaceholderTone =
+  | "bath"
+  | "tile"
+  | "hardware"
+  | "kitchen"
+  | "lifestyle"
+  | "neutral"
+  | "dark";
 
 export interface Category {
   slug: string;
@@ -70,4 +77,5 @@ export interface Catalog {
   title: string;
   vertical: Vertical | "all";
   fileSize: string;
+  fileUrl?: string;
 }

@@ -25,12 +25,12 @@ export function Hero() {
           The 2026 Collection
         </p>
         <h1 className="max-w-2xl font-heading text-4xl leading-[1.1] text-white text-balance sm:text-5xl lg:text-6xl">
-          Fittings, surfaces & hardware for spaces built to last
+          Fittings, surfaces, hardware and kitchens for spaces built to last
         </h1>
         <p className="max-w-xl text-base leading-relaxed text-white/70">
-          Explore SolBath&rsquo;s complete range of bathroom accessories, ceramic tiles and
-          hardware — curated for architects, dealers and homeowners who want more from every
-          surface.
+          Explore SolBath&apos;s complete range of bathroom accessories, ceramic tiles,
+          hardware and kitchen solutions - curated for architects, dealers and homeowners
+          who want more from every surface.
         </p>
         <div className="mt-2 flex flex-wrap gap-4">
           <Button href="/bathroom-accessories" size="lg">

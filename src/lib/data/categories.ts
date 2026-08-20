@@ -1,4 +1,4 @@
-import { Category } from "@/lib/types";
+import { Category, PlaceholderTone, Vertical } from "@/lib/types";
 
 export const categories: Category[] = [
   // Bathroom Accessories
@@ -107,11 +107,49 @@ export const categories: Category[] = [
       { label: "Finish", options: ["Matte Black", "Stainless Steel", "Antique Brass"] },
     ],
   },
+
+  // Kitchen
+  {
+    slug: "kitchen-faucets-sinks",
+    vertical: "kitchen",
+    name: "Kitchen Faucets & Sinks",
+    tagline: "Hard-working water zones with a polished, architectural presence.",
+    description:
+      "Pull-out mixers, workstation sinks and undermount bowls designed for daily prep, rinse and clean-up.",
+    filters: [
+      { label: "Type", options: ["Pull-Out Mixer", "Undermount Sink", "Workstation Sink"] },
+      { label: "Finish", options: ["Chrome", "Brushed Steel", "Matte Black", "Gunmetal"] },
+    ],
+  },
+  {
+    slug: "kitchen-surfaces-backsplashes",
+    vertical: "kitchen",
+    name: "Surfaces & Backsplashes",
+    tagline: "Countertops and backsplashes that make the kitchen feel composed.",
+    description:
+      "Porcelain slabs, backsplash tiles and stone-look surfaces for durable, easy-clean kitchens.",
+    filters: [
+      { label: "Application", options: ["Countertop", "Backsplash", "Wall Cladding"] },
+      { label: "Finish", options: ["Polished", "Matte", "Textured", "Glossy"] },
+    ],
+  },
+  {
+    slug: "kitchen-storage-hardware",
+    vertical: "kitchen",
+    name: "Storage & Cabinet Hardware",
+    tagline: "Quiet motion, smart access and clean cabinetry details.",
+    description:
+      "Drawer systems, pantry pull-outs, corner units and cabinet hardware for efficient modular kitchens.",
+    filters: [
+      { label: "Type", options: ["Drawer System", "Pantry Pull-Out", "Corner Unit", "Handle Profile"] },
+      { label: "Finish", options: ["Matte Black", "Brushed Brass", "Stainless Steel", "Graphite"] },
+    ],
+  },
 ];
 
 export const verticalMeta: Record<
   string,
-  { name: string; slug: string; tagline: string; tone: "bath" | "tile" | "hardware" }
+  { name: string; slug: Vertical; tagline: string; tone: PlaceholderTone }
 > = {
   "bathroom-accessories": {
     name: "Bathroom Accessories",
@@ -130,6 +168,12 @@ export const verticalMeta: Record<
     slug: "hardware",
     tagline: "Considered details for doors, cabinets and more.",
     tone: "hardware",
+  },
+  kitchen: {
+    name: "Kitchen",
+    slug: "kitchen",
+    tagline: "Fixtures, surfaces and storage for the heart of the home.",
+    tone: "kitchen",
   },
 };
 

@@ -5,6 +5,7 @@ import { SelectionProvider } from "@/components/selection-context";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
+import { BackToTopButton } from "@/components/layout/BackToTopButton";
 import { ThemeProvider } from "@/components/theme-provider";
 
 const manrope = Manrope({
@@ -21,11 +22,11 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "SolBath — Bathroom Accessories, Ceramic Tiles & Hardware",
+    default: "SolBath - Bathroom Accessories, Ceramic Tiles, Hardware & Kitchen",
     template: "%s | SolBath",
   },
   description:
-    "Premium bathroom accessories, ceramic tiles and hardware. Browse the catalog, get inspired, and request a quote.",
+    "Premium bathroom accessories, ceramic tiles, hardware and kitchen solutions. Browse the catalog, get inspired, and request a quote.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -39,8 +40,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <SelectionProvider>
             <Header />
-            <main className="flex-1">{children}</main>
+            <main id="main-content" tabIndex={-1} className="flex-1 focus:outline-none">
+              {children}
+            </main>
             <Footer />
+            <BackToTopButton />
             <WhatsAppButton />
           </SelectionProvider>
         </ThemeProvider>

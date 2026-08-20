@@ -7,15 +7,19 @@ import { verticalMeta } from "@/lib/data/categories";
 const items = [
   {
     ...verticalMeta["bathroom-accessories"],
-    description: "Faucets, showers & sanitaryware finished to a designer standard.",
+    description: "Faucets, showers and sanitaryware finished to a designer standard.",
   },
   {
     ...verticalMeta["ceramic-tiles"],
     description: "Floor, wall and large-format tiles in every texture and tone.",
   },
   {
-    ...verticalMeta["hardware"],
-    description: "Door, cabinet and security hardware — the details that matter.",
+    ...verticalMeta.hardware,
+    description: "Door, cabinet and security hardware - the details that matter.",
+  },
+  {
+    ...verticalMeta.kitchen,
+    description: "Kitchen fittings, surfaces and storage for composed everyday use.",
   },
 ];
 
@@ -23,7 +27,7 @@ export function CategoryShowcase() {
   return (
     <section className="py-20 sm:py-28">
       <Container>
-        <div className="grid gap-8 lg:grid-cols-3">
+        <div className="grid gap-8 sm:grid-cols-2 xl:grid-cols-4">
           {items.map((item) => (
             <Link
               key={item.slug}

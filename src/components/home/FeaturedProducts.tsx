@@ -12,8 +12,8 @@ export function FeaturedProducts() {
       <Container>
         <div className="flex flex-wrap items-end justify-between gap-6">
           <SectionHeading eyebrow="New & Notable" title="Featured across the collection" />
-          <Button href="/bathroom-accessories" variant="ghost">
-            View All Products
+          <Button href="/kitchen" variant="ghost">
+            View Kitchen Range
           </Button>
         </div>
         <div className="mt-12 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">

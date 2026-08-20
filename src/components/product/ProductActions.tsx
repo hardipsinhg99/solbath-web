@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Check, MessageCircle, Plus } from "lucide-react";
+import Image from "next/image";
+import { Check, Plus } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { useSelection } from "@/components/selection-context";
 import { Product } from "@/lib/types";
@@ -81,7 +82,8 @@ export function ProductActions({ product }: { product: Product }) {
         rel="noopener noreferrer"
         className="flex items-center gap-2 text-sm font-medium text-success hover:text-success/80"
       >
-        <MessageCircle size={17} /> Ask about this on WhatsApp
+        <Image src="/whatsapp-current.png" alt="" width={18} height={18} className="h-[18px] w-[18px]" />
+        Ask about this on WhatsApp
       </a>
 
       <Link
