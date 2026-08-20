@@ -1,6 +1,6 @@
 export const site = {
   name: "SolBath",
-  tagline: "Bathroom Accessories · Ceramic Tiles · Hardware",
+  tagline: "Bathroom Accessories - Ceramic Tiles - Hardware - Kitchen",
   whatsappNumber: "919876543210",
   phone: "+91 98765 43210",
   email: "hello@solbath.example",
@@ -15,6 +15,7 @@ export const site = {
     { label: "Bathroom Accessories", href: "/bathroom-accessories" },
     { label: "Ceramic Tiles", href: "/ceramic-tiles" },
     { label: "Hardware", href: "/hardware" },
+    { label: "Kitchen", href: "/kitchen" },
     { label: "Inspiration", href: "/inspiration" },
     { label: "For Trade", href: "/for-trade" },
     { label: "Find a Dealer", href: "/dealers" },

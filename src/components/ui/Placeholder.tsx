@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Droplet, Grid3x3, Hammer, Image as ImageIcon, Sparkles } from "lucide-react";
+import { Droplet, Grid3x3, Hammer, Image as ImageIcon, Sparkles, Utensils } from "lucide-react";
 import { PlaceholderTone } from "@/lib/types";
 import clsx from "clsx";
 
@@ -7,6 +7,7 @@ const toneGradients: Record<PlaceholderTone, string> = {
   bath: "from-[#e9dfc9] via-[#ddcda3] to-[#c7b184]",
   tile: "from-[#e5e0d4] via-[#d3cabb] to-[#b6ab97]",
   hardware: "from-[#e2ded7] via-[#c9c0b2] to-[#a89b87]",
+  kitchen: "from-[#ebe4d8] via-[#d8c7aa] to-[#9f8c70]",
   lifestyle: "from-[#efe8da] via-[#ddd0b3] to-[#c4ac83]",
   neutral: "from-[#f0ece3] via-[#e4ddcd] to-[#d3c9b3]",
   dark: "from-[#3a3527] via-[#241f16] to-[#161209]",
@@ -16,6 +17,7 @@ const toneIcon: Record<PlaceholderTone, typeof Droplet> = {
   bath: Droplet,
   tile: Grid3x3,
   hardware: Hammer,
+  kitchen: Utensils,
   lifestyle: Sparkles,
   neutral: ImageIcon,
   dark: ImageIcon,
@@ -25,6 +27,7 @@ const toneImages: Record<PlaceholderTone, string> = {
   bath: "/images/generated/solbath-bath-accessories.png",
   tile: "/images/generated/solbath-ceramic-tiles.png",
   hardware: "/images/generated/solbath-hardware.png",
+  kitchen: "/images/generated/solbath-kitchen.png",
   lifestyle: "/images/generated/solbath-lifestyle-kitchen.png",
   neutral: "/images/generated/solbath-showroom.png",
   dark: "/images/generated/solbath-hero-cinematic.png",

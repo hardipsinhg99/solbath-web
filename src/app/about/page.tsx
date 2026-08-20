@@ -14,6 +14,7 @@ const milestones = [
   { year: "2014", label: "Launched in-house ceramic tile manufacturing partnerships" },
   { year: "2018", label: "Expanded into architectural hardware" },
   { year: "2022", label: "Opened flagship Experience Studio in Ahmedabad" },
+  { year: "2026", label: "Introduced kitchen fittings, surfaces and storage" },
   { year: "2026", label: "Serving 6 showrooms across Gujarat & Maharashtra" },
 ];
 
@@ -28,7 +29,7 @@ export default function AboutPage() {
             About SolBath
           </p>
           <h1 className="max-w-xl font-heading text-4xl text-white sm:text-5xl">
-            Considered surfaces & fittings, for the long run
+            Considered surfaces and fittings, for the long run
           </h1>
         </Container>
       </section>
@@ -44,9 +45,9 @@ export default function AboutPage() {
             />
             <div className="mt-6 space-y-4 text-base leading-relaxed text-ink-soft">
               <p>
-                SolBath brings together bathroom accessories, ceramic tiles and hardware under
-                one roof — so architects, dealers and homeowners can specify a complete space
-                without juggling multiple vendors.
+                SolBath brings together bathroom accessories, ceramic tiles, hardware and kitchen
+                solutions under one roof, so architects, dealers and homeowners can specify a
+                complete space without juggling multiple vendors.
               </p>
               <p>
                 We work directly with manufacturing partners to hold finish and quality
@@ -66,7 +67,7 @@ export default function AboutPage() {
             </p>
             <div className="mt-6 space-y-6 border-l border-border pl-6">
               {milestones.map((m) => (
-                <div key={m.year} className="relative">
+                <div key={`${m.year}-${m.label}`} className="relative">
                   <span className="absolute -left-[29px] top-1 h-2.5 w-2.5 rounded-none bg-accent" />
                   <p className="font-heading text-lg text-ink">{m.year}</p>
                   <p className="mt-1 text-sm text-ink-soft">{m.label}</p>

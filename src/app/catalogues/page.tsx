@@ -2,6 +2,7 @@ import { FileText } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { CatalogDownloadButton } from "@/components/catalogs/CatalogDownloadButton";
+import { CatalogViewButton } from "@/components/catalogs/CatalogViewButton";
 import { catalogs } from "@/lib/data/catalogs";
 import { verticalMeta } from "@/lib/data/categories";
 
@@ -23,7 +24,7 @@ export default function CataloguesPage() {
           {catalogs.map((cat) => (
             <div
               key={cat.id}
-              className="flex items-center justify-between gap-4 rounded-none border border-border p-5"
+              className="flex flex-col gap-4 rounded-none border border-border p-5 sm:flex-row sm:items-center sm:justify-between"
             >
               <div className="flex items-center gap-4">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-none bg-stone text-accent">
@@ -37,7 +38,10 @@ export default function CataloguesPage() {
                   </p>
                 </div>
               </div>
-              <CatalogDownloadButton />
+              <div className="flex flex-wrap items-center gap-2.5">
+                {cat.fileUrl ? <CatalogViewButton pdfUrl={cat.fileUrl} title={cat.title} /> : null}
+                <CatalogDownloadButton />
+              </div>
             </div>
           ))}
         </div>

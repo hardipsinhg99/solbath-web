@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { X, MessageCircle, ClipboardList } from "lucide-react";
+import Image from "next/image";
+import { X, ClipboardList } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { useSelection } from "@/components/selection-context";
 import { whatsappLink } from "@/lib/data/site";
@@ -17,7 +18,7 @@ export function SelectionList() {
           Your selection is empty. Browse the catalog and tap &ldquo;Add to My Selection&rdquo;
           on any product.
         </p>
-        <Button href="/bathroom-accessories" variant="ghost">
+        <Button href="/kitchen" variant="ghost">
           Browse Products
         </Button>
       </div>
@@ -64,7 +65,8 @@ export function SelectionList() {
           rel="noopener noreferrer"
           className="flex items-center gap-2 text-sm font-medium text-success hover:text-success/80"
         >
-          <MessageCircle size={16} /> Share via WhatsApp
+          <Image src="/whatsapp-current.png" alt="" width={18} height={18} className="h-[18px] w-[18px]" />
+          Share via WhatsApp
         </a>
         <button onClick={clear} className="text-sm text-ink-soft hover:text-error">
           Clear Selection

@@ -1,7 +1,8 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { CheckCircle2, MessageCircle, X } from "lucide-react";
+import Image from "next/image";
+import { CheckCircle2, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { useSelection } from "@/components/selection-context";
 import { whatsappLink } from "@/lib/data/site";
@@ -110,7 +111,8 @@ export function QuoteForm({
           rel="noopener noreferrer"
           className="flex items-center justify-center gap-2 text-sm font-medium text-success hover:text-success/80"
         >
-          <MessageCircle size={16} /> Prefer WhatsApp? Send this as a chat instead
+          <Image src="/whatsapp-current.png" alt="" width={18} height={18} className="h-[18px] w-[18px]" />
+          Prefer WhatsApp? Send this as a chat instead
         </a>
       </form>
 
