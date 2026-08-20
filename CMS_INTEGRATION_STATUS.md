@@ -125,15 +125,67 @@ standalone Node/Koa server, own admin panel, own database. Integration is over H
   correctly in Strapi (and the persona bug fix was confirmed in the same pass).
 - The revalidation webhook was proven end-to-end, not just unit-tested in isolation.
 
-## What's left (content/ops, not code)
+## Production build — verified 2026-08-20
 
-- Upload real per-product images and per-catalogue PDFs through the Strapi admin —
-  `Product.images`/`Category.image`/`Catalog.file` all exist on the schema and the
-  frontend is ready to use them (catalogues automatically will; products/categories
-  still render the procedural `Placeholder` component since no code currently prefers a
-  real image over it — wiring that in is a small follow-up if/when real product photos
-  exist, not attempted here since there was nothing to point it at yet).
-- Decide on a production `FRONTEND_URL`/Strapi host and add the production media
-  domain to `next.config.ts`'s `remotePatterns` before deploying.
-- `CatalogDownloadButton.tsx` is still a placeholder ("Available after CMS setup") —
-  wire it to the real file URL once catalogue PDFs exist.
+Both apps build and run in production mode, not just `dev`:
+
+- **Frontend**: `npm run build` succeeds. `generateStaticParams` was added to the
+  vertical/category/product/inspiration-detail pages, so the build now statically
+  prerenders all 71 content pages (4 verticals, 12 categories, 36 products, 4 posts,
+  plus the fixed routes) at build time. Only `/quote` (reads `searchParams`) and
+  `/api/revalidate` (the webhook target) are server-rendered on demand, as expected.
+  Ran `next start` and hit all 25 routes (including a deliberate 404 and `/quote` with
+  query params) — zero console/page errors, correct HTTP status on every one.
+- **Backend**: `npm run build` (in `cms/`) succeeds — TS compile + admin panel build.
+  Ran `npm run start` (production mode, not `develop`) against the built `dist/` and
+  confirmed the API serves correctly and the bootstrap (permission sync + webhook sync)
+  still runs correctly and idempotently on a production boot.
+- No secrets are committed (`.env`/`.env.local` are gitignored in both apps, confirmed
+  via `git ls-files`), and `package-lock.json` exists for both apps.
+
+## Deployment checklist (what still needs real values before going live)
+
+Everything below is either a config value only *you* can supply (a real domain, a
+production secret) or a one-time step outside this codebase — none of it is unfinished
+code.
+
+**Frontend** (wherever it's hosted — e.g. Vercel):
+- [ ] Set `STRAPI_URL` to the production Strapi API's real URL (currently
+      `http://localhost:1337` in `.env.local`, which is gitignored and dev-only).
+- [ ] Set `REVALIDATE_SECRET` to a freshly generated production value (currently a dev
+      value in `.env.local`) — must match the Strapi backend's `REVALIDATE_SECRET`.
+- [ ] Add the production Strapi/media host to `next.config.ts`'s
+      `images.remotePatterns` (currently only `localhost:1337`/`:9000` for local dev) —
+      required before any real uploaded image will render.
+
+**Backend** (wherever Strapi is hosted):
+- [ ] Point `DATABASE_*` at the production Postgres instance (currently the local
+      Docker container on `127.0.0.1:5433`).
+- [ ] Point `MINIO_*` at production object storage, or swap the upload provider — the
+      local MinIO container isn't reachable outside this machine. `cms/package.json`
+      already depends on `@strapi/provider-upload-aws-s3`, which works against real S3
+      too, not just MinIO — just change the endpoint/credentials.
+- [ ] Generate fresh production secrets for `APP_KEYS`, `API_TOKEN_SALT`,
+      `ADMIN_JWT_SECRET`, `JWT_SECRET`, `TRANSFER_TOKEN_SALT`, `ENCRYPTION_KEY` — the
+      values in `cms/.env` are dev-only and gitignored; never reuse them in production.
+- [ ] Set `FRONTEND_URL` to the production frontend's real URL and `REVALIDATE_SECRET`
+      to match the frontend's value exactly — `cms/src/index.ts`'s bootstrap will then
+      automatically create/update the revalidation webhook to point at it on next boot.
+- [ ] Run `cms/scripts/seed.ts` once against the production database (or re-create the
+      content manually through the admin) — the seed script is idempotent, so running it
+      again later is always safe.
+
+**Content** (not a deploy blocker, but the site will look unfinished without it):
+- [ ] Upload real product photos, category images, and per-catalogue PDFs through the
+      Strapi admin — schema support exists (`Product.images`, `Category.image`,
+      `Catalog.file`), nothing currently has a real file attached.
+- [ ] Replace the seeded placeholder contact details (`hello@solbath.example`, etc.) via
+      Site Settings in the Strapi admin.
+
+**Small code follow-ups, not blockers** (nothing to point them at yet, so not attempted):
+- Products/categories still render the procedural `Placeholder` component even though
+  `Product.images`/`Category.image` exist on the schema — once real product photos are
+  uploaded, swap `ProductCard`/`ProductGallery`/`CategoryShowcase` to prefer the real
+  image when present, falling back to `Placeholder` otherwise.
+- `CatalogDownloadButton.tsx` is still a placeholder ("Available after CMS setup") — wire
+  it to the real file URL once catalogue PDFs exist.
