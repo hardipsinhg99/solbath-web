@@ -15,26 +15,37 @@ async function main() {
 
   console.log("Seeding Verticals...");
   const verticalIdByKey = new Map<string, string>();
+  let verticalSortOrder = 0;
   for (const [key, meta] of Object.entries(verticalMeta)) {
     const existing = await strapi.documents("api::vertical.vertical").findFirst({
-      filters: { key: { $eq: key as "bathroom-accessories" | "ceramic-tiles" | "hardware" } },
+      filters: { key: { $eq: key as "bathroom-accessories" | "ceramic-tiles" | "hardware" | "kitchen" } },
     });
-    const doc =
-      existing ??
-      (await strapi.documents("api::vertical.vertical").create({
-        data: {
-          key: key as "bathroom-accessories" | "ceramic-tiles" | "hardware",
-          name: meta.name,
-          slug: meta.slug,
-          tagline: meta.tagline,
-          tone: meta.tone,
-        },
-      }));
+    const doc = existing
+      ? await strapi
+          .documents("api::vertical.vertical")
+          .update({
+            documentId: existing.documentId,
+            data: { sortOrder: verticalSortOrder, isActive: true },
+          })
+          .then((d) => d ?? existing)
+      : await strapi.documents("api::vertical.vertical").create({
+          data: {
+            key: key as "bathroom-accessories" | "ceramic-tiles" | "hardware" | "kitchen",
+            name: meta.name,
+            slug: meta.slug,
+            tagline: meta.tagline,
+            tone: meta.tone,
+            sortOrder: verticalSortOrder,
+            isActive: true,
+          },
+        });
     verticalIdByKey.set(key, doc.documentId);
+    verticalSortOrder += 1;
   }
 
   console.log("Seeding Categories...");
   const categoryIdBySlug = new Map<string, string>();
+  const categorySortOrderByVertical = new Map<string, number>();
   for (const category of staticCategories) {
     const existing = await strapi.documents("api::category.category").findFirst({
       filters: { slug: { $eq: category.slug } },
@@ -42,33 +53,52 @@ async function main() {
     const verticalId = verticalIdByKey.get(category.vertical);
     if (!verticalId) throw new Error(`Unknown vertical "${category.vertical}"`);
 
-    const doc =
-      existing ??
-      (await strapi.documents("api::category.category").create({
-        data: {
-          slug: category.slug,
-          vertical: verticalId,
-          name: category.name,
-          tagline: category.tagline,
-          description: category.description,
-          filters: category.filters.map((f) => ({
-            label: f.label,
-            options: f.options.map((value) => ({ value })),
-          })),
-        },
-      }));
+    const sortOrder = categorySortOrderByVertical.get(category.vertical) ?? 0;
+    categorySortOrderByVertical.set(category.vertical, sortOrder + 1);
+
+    const doc = existing
+      ? await strapi
+          .documents("api::category.category")
+          .update({
+            documentId: existing.documentId,
+            data: { sortOrder, isActive: true },
+          })
+          .then((d) => d ?? existing)
+      : await strapi.documents("api::category.category").create({
+          data: {
+            slug: category.slug,
+            vertical: verticalId,
+            name: category.name,
+            tagline: category.tagline,
+            description: category.description,
+            filters: category.filters.map((f) => ({
+              label: f.label,
+              options: f.options.map((value) => ({ value })),
+            })),
+            sortOrder,
+            isActive: true,
+          },
+        });
     categoryIdBySlug.set(category.slug, doc.documentId);
   }
 
   console.log("Seeding Products...");
   const productIdBySlug = new Map<string, string>();
+  const productSortOrderByCategory = new Map<string, number>();
   const MARKER_TAGS = new Set(["bestseller", "new"]);
   for (const product of staticProducts) {
+    const sortOrder = productSortOrderByCategory.get(product.categorySlug) ?? 0;
+    productSortOrderByCategory.set(product.categorySlug, sortOrder + 1);
+
     const existing = await strapi.documents("api::product.product").findFirst({
       filters: { slug: { $eq: product.slug } },
       status: "draft",
     });
     if (existing) {
+      await strapi.documents("api::product.product").update({
+        documentId: existing.documentId,
+        data: { sortOrder },
+      });
       productIdBySlug.set(product.slug, existing.documentId);
       continue;
     }
@@ -103,6 +133,7 @@ async function main() {
         featured: Boolean(product.featured),
         isNew: Boolean(product.isNew),
         tone: product.tone,
+        sortOrder,
       },
     });
     await strapi.documents("api::product.product").publish({ documentId: created.documentId });
@@ -114,11 +145,18 @@ async function main() {
     const existing = await strapi.documents("api::dealer.dealer").findFirst({
       filters: { name: { $eq: dealer.name } },
     });
-    if (existing) continue;
 
     const categoryIds = dealer.categories
       .map((v) => verticalIdByKey.get(v))
       .filter((id): id is string => Boolean(id));
+
+    if (existing) {
+      await strapi.documents("api::dealer.dealer").update({
+        documentId: existing.documentId,
+        data: { categories: { set: categoryIds } },
+      });
+      continue;
+    }
 
     await strapi.documents("api::dealer.dealer").create({
       data: {
@@ -179,11 +217,21 @@ async function main() {
   }
 
   console.log("Seeding Catalogs...");
+  let catalogSortOrder = 0;
   for (const catalog of staticCatalogs) {
+    const sortOrder = catalogSortOrder;
+    catalogSortOrder += 1;
+
     const existing = await strapi.documents("api::catalog.catalog").findFirst({
       filters: { title: { $eq: catalog.title } },
     });
-    if (existing) continue;
+    if (existing) {
+      await strapi.documents("api::catalog.catalog").update({
+        documentId: existing.documentId,
+        data: { sortOrder, isActive: true },
+      });
+      continue;
+    }
 
     const verticalIds =
       catalog.vertical === "all"
@@ -194,6 +242,8 @@ async function main() {
       data: {
         title: catalog.title,
         vertical: { connect: verticalIds },
+        sortOrder,
+        isActive: true,
         // no real PDF files exist in the repo yet — upload the actual catalog PDFs
         // in the admin and attach them to these records manually.
       },

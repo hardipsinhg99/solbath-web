@@ -459,6 +459,7 @@ export interface ApiCatalogCatalog extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     file: Schema.Attribute.Media<'files'>;
+    isActive: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -466,6 +467,7 @@ export interface ApiCatalogCatalog extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    sortOrder: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
     title: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -492,6 +494,7 @@ export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
     description: Schema.Attribute.Text;
     filters: Schema.Attribute.Component<'shared.filter-group', true>;
     image: Schema.Attribute.Media<'images'>;
+    isActive: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -501,9 +504,10 @@ export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
     name: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
+    sortOrder: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
     tagline: Schema.Attribute.String & Schema.Attribute.Required;
     tone: Schema.Attribute.Enumeration<
-      ['bath', 'tile', 'hardware', 'lifestyle', 'neutral', 'dark']
+      ['bath', 'tile', 'hardware', 'kitchen', 'lifestyle', 'neutral', 'dark']
     >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -622,7 +626,7 @@ export interface ApiInspirationPostInspirationPost
     slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
     title: Schema.Attribute.String & Schema.Attribute.Required;
     tone: Schema.Attribute.Enumeration<
-      ['bath', 'tile', 'hardware', 'lifestyle', 'neutral', 'dark']
+      ['bath', 'tile', 'hardware', 'kitchen', 'lifestyle', 'neutral', 'dark']
     >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -663,9 +667,10 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
     shortDescription: Schema.Attribute.String & Schema.Attribute.Required;
     sizes: Schema.Attribute.Component<'shared.value-item', true>;
     slug: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
+    sortOrder: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
     specs: Schema.Attribute.Component<'shared.spec-row', true>;
     tone: Schema.Attribute.Enumeration<
-      ['bath', 'tile', 'hardware', 'lifestyle', 'neutral', 'dark']
+      ['bath', 'tile', 'hardware', 'kitchen', 'lifestyle', 'neutral', 'dark']
     >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -784,7 +789,7 @@ export interface ApiTestimonialTestimonial extends Struct.CollectionTypeSchema {
 export interface ApiVerticalVertical extends Struct.CollectionTypeSchema {
   collectionName: 'verticals';
   info: {
-    description: 'The 3 fixed top-level verticals \u2014 hero copy for vertical landing pages.';
+    description: 'The top-level verticals \u2014 hero copy for vertical landing pages.';
     displayName: 'Vertical';
     pluralName: 'verticals';
     singularName: 'vertical';
@@ -798,8 +803,9 @@ export interface ApiVerticalVertical extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     heroDescription: Schema.Attribute.Text;
     heroImage: Schema.Attribute.Media<'images'>;
+    isActive: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
     key: Schema.Attribute.Enumeration<
-      ['bathroom-accessories', 'ceramic-tiles', 'hardware']
+      ['bathroom-accessories', 'ceramic-tiles', 'hardware', 'kitchen']
     > &
       Schema.Attribute.Required &
       Schema.Attribute.Unique;
@@ -811,9 +817,12 @@ export interface ApiVerticalVertical extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     name: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
+    seoDescription: Schema.Attribute.Text;
+    seoTitle: Schema.Attribute.String;
     slug: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
+    sortOrder: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
     tagline: Schema.Attribute.String & Schema.Attribute.Required;
-    tone: Schema.Attribute.Enumeration<['bath', 'tile', 'hardware']>;
+    tone: Schema.Attribute.Enumeration<['bath', 'tile', 'hardware', 'kitchen']>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
