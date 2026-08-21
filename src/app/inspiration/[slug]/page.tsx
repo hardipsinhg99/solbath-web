@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import ReactMarkdown from "react-markdown";
 import { Container } from "@/components/ui/Container";
 import { Placeholder } from "@/components/ui/Placeholder";
 import { getPost, getPosts } from "@/lib/data/posts";
@@ -61,21 +62,27 @@ export default async function InspirationDetailPage({
           <Placeholder tone={post.tone} label={post.title} className="h-full w-full" />
         </div>
 
-        <div className="mx-auto mt-10 max-w-2xl space-y-5 text-base leading-relaxed text-ink-soft">
-          <p>
-            When planning this look, we started with the fittings and let the surfaces follow
-            — choosing finishes that would age gracefully and pairing them with tiles or
-            hardware that add warmth without competing for attention.
-          </p>
-          <p>
-            The result is a space that feels considered rather than curated: every product
-            earns its place, and every finish has been chosen to work together across at
-            least a decade of daily use.
-          </p>
-          <p>
-            Below are the exact products featured in this story — tap through for full specs,
-            finish options and to add them to your quote list.
-          </p>
+        <div className="mx-auto mt-10 max-w-2xl space-y-5 text-base leading-relaxed text-ink-soft [&_h2]:mt-8 [&_h2]:font-heading [&_h2]:text-xl [&_h2]:text-ink [&_h3]:mt-6 [&_h3]:font-heading [&_h3]:text-lg [&_h3]:text-ink [&_strong]:text-ink [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5">
+          {post.body ? (
+            <ReactMarkdown>{post.body}</ReactMarkdown>
+          ) : (
+            <>
+              <p>
+                When planning this look, we started with the fittings and let the surfaces
+                follow — choosing finishes that would age gracefully and pairing them with
+                tiles or hardware that add warmth without competing for attention.
+              </p>
+              <p>
+                The result is a space that feels considered rather than curated: every product
+                earns its place, and every finish has been chosen to work together across at
+                least a decade of daily use.
+              </p>
+              <p>
+                Below are the exact products featured in this story — tap through for full
+                specs, finish options and to add them to your quote list.
+              </p>
+            </>
+          )}
         </div>
 
         {relatedProducts.length > 0 ? (

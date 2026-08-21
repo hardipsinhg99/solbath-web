@@ -70,6 +70,7 @@ export interface InspirationPost {
   readTime: string;
   tone: PlaceholderTone;
   relatedProductSlugs: string[];
+  body?: string;
 }
 
 export interface Catalog {

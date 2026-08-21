@@ -9,6 +9,7 @@ interface StrapiPost {
   readTime: string;
   tone: PlaceholderTone;
   relatedProducts: { slug: string }[];
+  body: string | null;
 }
 
 function toPost(raw: StrapiPost): InspirationPost {
@@ -20,6 +21,7 @@ function toPost(raw: StrapiPost): InspirationPost {
     readTime: raw.readTime,
     tone: raw.tone,
     relatedProductSlugs: raw.relatedProducts.map((p) => p.slug),
+    body: raw.body ?? undefined,
   };
 }
 
