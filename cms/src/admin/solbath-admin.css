@@ -1,0 +1,25 @@
+/* Matches the frontend's font pairing (src/app/layout.tsx / globals.css):
+   Manrope for headings, Inter for body text. Strapi's design-system has no
+   theme token for font-family, so this overrides it globally with !important
+   to beat the styled-components-generated rules. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap');
+
+body,
+body * {
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif !important;
+}
+
+h1,
+h2,
+h3,
+[class*='Typography'][font-size='6'],
+[class*='Typography'][font-size='7'] {
+  font-family: 'Manrope', 'Inter', sans-serif !important;
+  font-weight: 700 !important;
+}
