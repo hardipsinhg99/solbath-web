@@ -71,6 +71,7 @@ export interface InspirationPost {
   tone: PlaceholderTone;
   relatedProductSlugs: string[];
   body?: string;
+  coverImage?: string;
 }
 
 export interface Catalog {

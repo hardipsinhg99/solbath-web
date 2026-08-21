@@ -1,4 +1,4 @@
-import { strapiList } from "@/lib/cms/client";
+import { mediaUrl, StrapiMedia, strapiList } from "@/lib/cms/client";
 import { InspirationPost, PlaceholderTone } from "@/lib/types";
 
 interface StrapiPost {
@@ -10,6 +10,7 @@ interface StrapiPost {
   tone: PlaceholderTone;
   relatedProducts: { slug: string }[];
   body: string | null;
+  coverImage: StrapiMedia | null;
 }
 
 function toPost(raw: StrapiPost): InspirationPost {
@@ -22,10 +23,12 @@ function toPost(raw: StrapiPost): InspirationPost {
     tone: raw.tone,
     relatedProductSlugs: raw.relatedProducts.map((p) => p.slug),
     body: raw.body ?? undefined,
+    coverImage: mediaUrl(raw.coverImage),
   };
 }
 
-const POST_POPULATE = "populate[relatedProducts][fields][0]=slug";
+const POST_POPULATE =
+  "populate[relatedProducts][fields][0]=slug&populate[coverImage]=true";
 
 export async function getPosts(): Promise<InspirationPost[]> {
   const data = await strapiList<StrapiPost>(

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import { Container } from "@/components/ui/Container";
@@ -58,8 +59,19 @@ export default async function InspirationDetailPage({
           <p className="mt-4 text-base leading-relaxed text-ink-soft">{post.excerpt}</p>
         </div>
 
-        <div className="mx-auto mt-10 aspect-[16/9] max-w-4xl overflow-hidden rounded-none">
-          <Placeholder tone={post.tone} label={post.title} className="h-full w-full" />
+        <div className="relative mx-auto mt-10 aspect-[16/9] max-w-4xl overflow-hidden rounded-none">
+          {post.coverImage ? (
+            <Image
+              src={post.coverImage}
+              alt={post.title}
+              fill
+              sizes="(max-width: 1024px) 100vw, 896px"
+              className="object-cover"
+              priority
+            />
+          ) : (
+            <Placeholder tone={post.tone} label={post.title} className="h-full w-full" />
+          )}
         </div>
 
         <div className="mx-auto mt-10 max-w-2xl space-y-5 text-base leading-relaxed text-ink-soft [&_h2]:mt-8 [&_h2]:font-heading [&_h2]:text-xl [&_h2]:text-ink [&_h3]:mt-6 [&_h3]:font-heading [&_h3]:text-lg [&_h3]:text-ink [&_strong]:text-ink [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5">
@@ -101,8 +113,18 @@ export default async function InspirationDetailPage({
           <div className="mt-8 grid gap-8 sm:grid-cols-3">
             {morePosts.map((p) => (
               <Link key={p.slug} href={`/inspiration/${p.slug}`} className="group flex flex-col">
-                <div className="aspect-[4/3] overflow-hidden rounded-none">
-                  <Placeholder tone={p.tone} label={p.room} className="h-full w-full" />
+                <div className="relative aspect-[4/3] overflow-hidden rounded-none">
+                  {p.coverImage ? (
+                    <Image
+                      src={p.coverImage}
+                      alt={p.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <Placeholder tone={p.tone} label={p.room} className="h-full w-full" />
+                  )}
                 </div>
                 <h3 className="mt-3 font-heading text-lg text-ink group-hover:text-accent-dark">
                   {p.title}

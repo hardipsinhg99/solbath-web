@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Placeholder } from "@/components/ui/Placeholder";
@@ -23,12 +24,22 @@ export default async function InspirationPage() {
         <div className="mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
           {posts.map((post) => (
             <Link key={post.slug} href={`/inspiration/${post.slug}`} className="group flex flex-col">
-              <div className="aspect-[4/3] overflow-hidden rounded-none">
-                <Placeholder
-                  tone={post.tone}
-                  label={post.room}
-                  className="h-full w-full transition-transform duration-300 group-hover:scale-[1.04]"
-                />
+              <div className="relative aspect-[4/3] overflow-hidden rounded-none">
+                {post.coverImage ? (
+                  <Image
+                    src={post.coverImage}
+                    alt={post.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-300 group-hover:scale-[1.04]"
+                  />
+                ) : (
+                  <Placeholder
+                    tone={post.tone}
+                    label={post.room}
+                    className="h-full w-full transition-transform duration-300 group-hover:scale-[1.04]"
+                  />
+                )}
               </div>
               <p className="mt-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">
                 {post.room} · {post.readTime}
