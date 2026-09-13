@@ -79,3 +79,51 @@ export interface Catalog {
   fileSize: string;
   fileUrl?: string;
 }
+
+export interface SectionHeading {
+  eyebrow?: string;
+  title: string;
+}
+
+export interface StatItem {
+  icon: "award" | "users" | "shield" | "truck";
+  label: string;
+  detail: string;
+}
+
+export interface PersonaItem {
+  icon: "home" | "architect" | "dealer";
+  title: string;
+  description: string;
+  href: string;
+  ctaLabel: string;
+}
+
+export interface CtaCard {
+  icon: "map-pin" | "download";
+  heading: string;
+  description: string;
+  ctaLabel: string;
+  ctaHref: string;
+  variant: "light" | "dark";
+}
+
+export interface HomePage {
+  heroEyebrow: string;
+  heroHeading: string;
+  heroSubheading: string;
+  heroPrimaryCtaLabel: string;
+  heroPrimaryCtaHref: string;
+  heroSecondaryCtaLabel: string;
+  heroSecondaryCtaHref: string;
+  trustStats: StatItem[];
+  personaHeading: SectionHeading;
+  personas: PersonaItem[];
+  featuredProductsHeading: SectionHeading;
+  featuredProductsCtaLabel: string;
+  featuredProductsCtaHref: string;
+  inspirationHeading: SectionHeading;
+  inspirationCtaLabel: string;
+  testimonialsHeading: SectionHeading;
+  ctaCards: CtaCard[];
+}
