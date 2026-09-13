@@ -132,9 +132,9 @@ catalog change), it's almost always a leftover local `.next/cache` — delete
 `.next/` and rebuild. A real CI/deploy pipeline builds from a clean checkout
 every time, so this shouldn't come up outside local dev.
 
-**Deploying to real infrastructure (AWS)?** See [DEPLOYMENT.md](DEPLOYMENT.md)
-for the recommended architecture, required environment variables per
-service, and a step-by-step walkthrough.
+**Deploying to real infrastructure?** See [DEPLOYMENT.md](DEPLOYMENT.md) for
+the actual deployment target (a Hostinger VPS), required environment
+variables, and a step-by-step walkthrough.
 
 ## Environment variables
 

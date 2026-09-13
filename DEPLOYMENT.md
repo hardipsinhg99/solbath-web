@@ -1,124 +1,182 @@
-# Deployment
+# Deployment (Hostinger)
 
-This is a small B2B catalog + lead-gen site, not high-traffic e-commerce —
-size accordingly. Two apps + one database, deployed separately:
+Both apps need a persistent Node process (the frontend uses ISR + a
+dynamic `/api/revalidate` route, Strapi is a standalone Node/Koa server) —
+that means a **Hostinger VPS plan** (KVM, root/SSH access), not shared or
+static hosting. One VPS running both apps + Postgres is enough for this
+catalog's traffic; size up later if needed.
 
-| Piece | Recommended service | Why |
-|---|---|---|
-| Frontend (repo root) | **AWS Amplify Hosting** | Purpose-built for Next.js (App Router, ISR, on-demand revalidation). Deploys straight from this git repo, no server to manage. |
-| CMS (`cms/`) | **Elastic Beanstalk** (Node.js platform) or **Lightsail** | Both run the Strapi Node app without touching Docker/ECS. Beanstalk auto-provisions a load balancer + auto-scaling; Lightsail is a flat-fee VM — cheaper and simpler if you don't need auto-scaling yet. |
-| Database | **RDS for PostgreSQL** | Managed backups, patching, failover. Don't run Postgres yourself in production — `docker-compose.yml` at the repo root is for local dev only. |
-| Media uploads | **S3** | `@strapi/provider-upload-aws-s3` is already wired up (see `cms/config/plugins.ts`) — MinIO (also via `docker-compose.yml`) is only a local stand-in for the same provider. |
-| Domain/SSL | **Route 53 + ACM** | Amplify and Beanstalk both provision free SSL certs through ACM automatically. |
+- **RAM**: 4 GB recommended (2 GB works, but Strapi's admin-panel build is
+  memory-hungry and will be slow/tight alongside Postgres + Next.js on the
+  same box)
+- **OS**: Ubuntu (whatever recent LTS Hostinger offers on their VPS plans)
 
-Rough sizing/cost: Amplify ~$5–15/mo, Strapi on Lightsail (1–2GB) ~$10–20/mo
-*or* on Beanstalk (t3.small/t4g.small + ALB) ~$35–50/mo, RDS
-`db.t4g.micro` single-AZ ~$15/mo, S3 pay-per-use ~$1–5/mo. Start on
-Lightsail — migrating to Beanstalk/ECS later needs no app code changes.
+## Stack on the VPS
 
-## 1. Provision the database
+- **PostgreSQL** — installed directly on the VPS (or run just the
+  `postgres` service from this repo's `docker-compose.yml` if you'd rather
+  use Docker — drop the `minio` service, it's not needed)
+- **Node.js** — a version in this repo's supported range (`>=20 <=26`)
+- **PM2** — keeps both apps running as background services with
+  auto-restart on crash/reboot
+- **Nginx** — reverse proxy + where SSL terminates for both apps
+- **Certbot** — free Let's Encrypt certificates for your domain(s)
 
-Create an RDS PostgreSQL instance (`db.t4g.micro` is plenty to start).
-Note the endpoint, database name, username, and password — these become
-`DATABASE_HOST`/`DATABASE_NAME`/`DATABASE_USERNAME`/`DATABASE_PASSWORD` for
-the CMS. Set `DATABASE_PORT=5432` (RDS default, not the `5433` used by the
-local docker-compose mapping) and `DATABASE_SSL=true`.
+**Media storage: local disk**, not S3 — the CMS's upload provider defaults
+to `local` (writes to `cms/public/uploads`, served by Strapi itself). No
+external object-storage account needed. This one directory is the only
+thing on the server that isn't reproducible from git + the database dump,
+so **back it up** (a cron'd `rsync`/`rclone` to off-site storage, or
+whatever backup feature your Hostinger plan includes) and never wipe it on
+redeploy.
 
-## 2. Provision media storage
+## 1. DNS
 
-Create an S3 bucket (private, not public-read — Strapi generates signed/
-public URLs itself via `baseUrl`) and an IAM user scoped to just that
-bucket (`s3:PutObject`, `s3:GetObject`, `s3:DeleteObject`,
-`s3:PutObjectAcl`, `s3:ListBucket`). These map to the CMS's
-`MINIO_*`-named env vars (see `cms/.env.example`) — the variable names are
-a holdover from local dev using MinIO, but the same `aws-s3` provider reads
-them for real S3:
+Point your domain at the VPS's IP, plus a subdomain for the CMS:
 
-- `MINIO_ENDPOINT` → `https://s3.<your-bucket-region>.amazonaws.com`
-- `MINIO_BUCKET` → your bucket name
-- `MINIO_ACCESS_KEY` / `MINIO_SECRET_KEY` → the IAM user's keys
-- `MINIO_PUBLIC_URL` → the same as `MINIO_ENDPOINT`, or a CloudFront
-  distribution in front of the bucket
-- `MINIO_REGION` → your bucket's actual AWS region (defaults to
-  `us-east-1` if unset — **must match your bucket's real region** or
-  uploads/downloads will fail)
+- `yourdomain.com` → VPS IP (frontend)
+- `cms.yourdomain.com` → same VPS IP (Strapi admin + API)
 
-## 3. Deploy the CMS (Strapi)
+## 2. Server setup
 
-On Elastic Beanstalk or Lightsail, running the `cms/` directory as its own
-Node app:
+SSH in and install the stack:
+
+```bash
+# Node (adjust for whatever LTS you're targeting)
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+sudo npm install -g pm2
+sudo apt-get install -y nginx postgresql certbot python3-certbot-nginx
+```
+
+Create the database:
+
+```bash
+sudo -u postgres psql -c "CREATE DATABASE solbath_cms;"
+sudo -u postgres psql -c "CREATE USER solbath WITH ENCRYPTED PASSWORD '<real password>';"
+sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE solbath_cms TO solbath;"
+```
+
+Clone the repo:
+
+```bash
+git clone https://github.com/hardipsinhg99/solbath-web.git
+cd solbath-web
+```
+
+## 3. Configure and start the CMS
 
 ```bash
 cd cms
-npm install
-npm run build      # builds the admin panel
-npm run start       # production server — put this behind your platform's process manager
+cp .env.example .env
 ```
 
-Set every variable in `cms/.env.example` as real environment variables on
-the platform (not a committed `.env` file) — in particular:
+Fill in `.env` with real values:
 
 - `APP_KEYS`, `API_TOKEN_SALT`, `ADMIN_JWT_SECRET`, `JWT_SECRET`,
-  `TRANSFER_TOKEN_SALT`, `ENCRYPTION_KEY` — generate fresh random values
-  for production, never reuse the ones from local dev
-- `DATABASE_*` — from step 1
-- `MINIO_*` — from step 2
-- `FRONTEND_URL` — the production frontend's real URL (used to build the
-  revalidation webhook target)
+  `TRANSFER_TOKEN_SALT`, `ENCRYPTION_KEY` — generate fresh random values,
+  never reuse local-dev ones
+- `DATABASE_*` — point at the Postgres you just created (`DATABASE_HOST=127.0.0.1`,
+  `DATABASE_PORT=5432`, plus the name/user/password above)
+- `UPLOAD_PROVIDER=local` (or just leave it unset — that's the default)
+- `FRONTEND_URL=https://yourdomain.com`
 - `REVALIDATE_SECRET` — generate one, and set the *same* value on the
   frontend in step 4
 
-**Seed the catalog once, against this production database:**
-
 ```bash
-npx tsx scripts/seed.ts
+npm install
+npm run build
+npx tsx scripts/seed.ts   # idempotent — populates the catalog once
+pm2 start "npm run start" --name solbath-cms
 ```
 
-This is idempotent (safe to re-run), and creates the first pass of
-verticals/categories/products/dealers/testimonials/catalogs/site
-settings/home page from `cms/seed-data/*.ts`. Then create the first admin
-user by visiting `https://<your-cms-domain>/admin`.
+Visit `https://cms.yourdomain.com/admin` (once Nginx is set up in step 5)
+and create the first admin user.
 
-## 4. Deploy the frontend (Amplify)
+## 4. Configure and start the frontend
 
-Connect this repo to Amplify Hosting. Since the frontend lives at the repo
-root and `cms/` is a separate app in a subfolder, point Amplify's build at
-the repo root (default) — it only needs `package.json`/`next.config.ts`
-there and never touches `cms/`.
+```bash
+cd ..   # repo root
+cp .env.example .env.local
+```
 
-Environment variables (from `.env.example`):
-- `STRAPI_URL` — the CMS's production URL from step 3
+- `STRAPI_URL=https://cms.yourdomain.com`
 - `REVALIDATE_SECRET` — must match step 3 exactly
 
-## 5. Domain + SSL
+```bash
+npm install
+npm run build
+pm2 start "npm run start" --name solbath-web
+pm2 save   # persist across reboots
+```
 
-Route 53 for DNS, ACM for certificates — both Amplify and Beanstalk
-provision/attach ACM certs automatically once the domain is pointed at
-them.
+## 5. Nginx + SSL
+
+Two server blocks, one per domain, each proxying to its app's local port
+(Next.js on `:3000`, Strapi on `:1337` by default):
+
+```nginx
+# /etc/nginx/sites-available/solbath-web
+server {
+    server_name yourdomain.com;
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+# /etc/nginx/sites-available/solbath-cms
+server {
+    server_name cms.yourdomain.com;
+    location / {
+        proxy_pass http://127.0.0.1:1337;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+```bash
+sudo ln -s /etc/nginx/sites-available/solbath-web /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/solbath-cms /etc/nginx/sites-enabled/
+sudo nginx -t && sudo systemctl reload nginx
+sudo certbot --nginx -d yourdomain.com -d cms.yourdomain.com
+```
+
+Uploaded media is served automatically through the CMS's own Nginx block
+(`https://cms.yourdomain.com/uploads/...`) — no separate config needed.
 
 ## Post-deploy checklist
 
-- [ ] Confirm the revalidation webhook actually fires: edit a product in
-      the CMS admin, confirm the change appears on the live frontend
-      within a few seconds (not the full 1-hour ISR fallback window)
+- [ ] Confirm the revalidation webhook fires: edit a product in the admin,
+      confirm the change appears on the live frontend within a few seconds
+      (not the full 1-hour ISR fallback window)
 - [ ] Replace the seeded placeholder contact details (email, phone,
       address) via Site Settings in the admin
 - [ ] Upload real product photos — nothing is seeded automatically (see
       the root README's "Known content gaps")
 - [ ] Mark the products you want featured (`featured: true`) and add
       standout products to each vertical's `popularProducts` — both are
-      curated by hand in the admin, not derived from any flag in the seed
-      data
+      curated by hand in the admin
 - [ ] Finish the 3 hardware products still flagged "Needs content" in
       their description (see the root README)
-- [ ] Point real DNS at Amplify + your CMS host, confirm HTTPS on both
+- [ ] Set up a backup job for `cms/public/uploads` and the Postgres
+      database — neither lives in git
 
 ## What NOT to do
 
-- Don't run Postgres or MinIO yourself in production — `docker-compose.yml`
-  here is local-dev-only.
+- Don't run Postgres via the local-dev docker-compose mapping (`:5433`) in
+  production — use the VPS's own Postgres on its default port, or a
+  properly managed instance.
 - Don't commit real values for anything in `.env.example` — generate fresh
-  secrets per environment and set them as platform environment variables.
-- Don't skip step 3's `npx tsx scripts/seed.ts` — without it the CMS
-  starts with an empty catalog (no verticals/categories/products exist
-  until the seed script or an admin creates them).
+  secrets on the server, in the actual `.env` files (which stay untracked).
+- Don't skip `npx tsx scripts/seed.ts` — without it the CMS starts with an
+  empty catalog.
+- Don't delete or overwrite `cms/public/uploads` on redeploy — that's
+  where every uploaded product photo actually lives.
