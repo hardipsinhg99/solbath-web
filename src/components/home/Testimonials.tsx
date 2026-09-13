@@ -2,16 +2,17 @@ import { Star } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { getTestimonials } from "@/lib/data/testimonials";
+import { getHomePage } from "@/lib/data/home";
 
 export async function Testimonials() {
-  const testimonials = await getTestimonials();
+  const [testimonials, home] = await Promise.all([getTestimonials(), getHomePage()]);
 
   return (
     <section className="bg-navy py-20 sm:py-28">
       <Container>
         <SectionHeading
-          eyebrow="Trusted by homeowners & trade partners"
-          title="What people say about SolBath"
+          eyebrow={home.testimonialsHeading.eyebrow}
+          title={home.testimonialsHeading.title}
           align="center"
           tone="dark"
           className="mx-auto"

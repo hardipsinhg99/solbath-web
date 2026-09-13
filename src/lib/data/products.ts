@@ -1,4 +1,4 @@
-import { strapiList } from "@/lib/cms/client";
+import { mediaUrl, StrapiMedia, strapiList } from "@/lib/cms/client";
 import { PlaceholderTone, Product, SpecRow, Vertical } from "@/lib/types";
 
 interface StrapiProduct {
@@ -12,6 +12,7 @@ interface StrapiProduct {
   specs: SpecRow[];
   featured: boolean;
   isNew: boolean;
+  images?: StrapiMedia[] | null;
   tone: PlaceholderTone;
   vertical: { key: Vertical } | null;
   category: { slug: string } | null;
@@ -32,13 +33,15 @@ function toProduct(raw: StrapiProduct): Product {
     tags: [...(raw.featured ? ["Bestseller"] : []), ...(raw.isNew ? ["New"] : [])],
     featured: raw.featured,
     isNew: raw.isNew,
+    images: raw.images?.map(mediaUrl).filter((url): url is string => Boolean(url)),
     tone: raw.tone,
   };
 }
 
 const PRODUCT_POPULATE =
   "populate[vertical][fields][0]=key&populate[category][fields][0]=slug" +
-  "&populate[finishes]=true&populate[sizes]=true&populate[specs]=true";
+  "&populate[finishes]=true&populate[sizes]=true&populate[specs]=true" +
+  "&populate[images][fields][0]=url";
 
 export async function getProductsByCategory(
   vertical: Vertical,
@@ -66,6 +69,19 @@ export async function getFeaturedProducts(): Promise<Product[]> {
     ["products"],
   );
   return data.map(toProduct);
+}
+
+export async function getProductsBySlugs(slugs: string[]): Promise<Product[]> {
+  if (slugs.length === 0) return [];
+
+  const inFilter = slugs.map((slug, i) => `filters[slug][$in][${i}]=${slug}`).join("&");
+  const data = await strapiList<StrapiProduct>(
+    `/api/products?${inFilter}&${PRODUCT_POPULATE}&pagination[pageSize]=${slugs.length}`,
+    ["products"],
+  );
+
+  const bySlug = new Map(data.map((p) => [p.slug, p]));
+  return slugs.map((slug) => bySlug.get(slug)).filter((p): p is StrapiProduct => Boolean(p)).map(toProduct);
 }
 
 export async function getProduct(slug: string): Promise<Product | undefined> {

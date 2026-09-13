@@ -42,7 +42,7 @@ export default async function CataloguesPage() {
               </div>
               <div className="flex flex-wrap items-center gap-2.5">
                 {cat.fileUrl ? <CatalogViewButton pdfUrl={cat.fileUrl} title={cat.title} /> : null}
-                <CatalogDownloadButton />
+                <CatalogDownloadButton fileUrl={cat.fileUrl} title={cat.title} />
               </div>
             </div>
           ))}

@@ -16,6 +16,7 @@ const PUBLIC_PERMISSIONS = [
   'api::catalog.catalog.find',
   'api::catalog.catalog.findOne',
   'api::site-setting.site-setting.find',
+  'api::home-page.home-page.find',
   'api::contact-submission.contact-submission.create',
   'api::quote-submission.quote-submission.create',
 ];

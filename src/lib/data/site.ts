@@ -1,5 +1,10 @@
 import { strapiSingle } from "@/lib/cms/client";
 
+export interface FooterColumn {
+  title: string;
+  links: { label: string; href: string }[];
+}
+
 export interface SiteSettings {
   name: string;
   tagline: string;
@@ -14,6 +19,8 @@ export interface SiteSettings {
     youtube?: string;
   };
   nav: { label: string; href: string }[];
+  footerTagline: string;
+  footerColumns: FooterColumn[];
 }
 
 interface StrapiSiteSettings {
@@ -25,11 +32,13 @@ interface StrapiSiteSettings {
   address: string | null;
   social: SiteSettings["social"] | null;
   nav: { label: string; href: string }[];
+  footerTagline: string | null;
+  footerColumns: FooterColumn[];
 }
 
 export async function getSiteSettings(): Promise<SiteSettings> {
   const data = await strapiSingle<StrapiSiteSettings>(
-    "/api/site-setting?populate[social]=true&populate[nav]=true",
+    "/api/site-setting?populate[social]=true&populate[nav]=true&populate[footerColumns][populate]=links",
     ["site-settings"],
   );
 
@@ -46,6 +55,8 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     address: data.address ?? "",
     social: data.social ?? {},
     nav: data.nav,
+    footerTagline: data.footerTagline ?? "",
+    footerColumns: data.footerColumns ?? [],
   };
 }
 

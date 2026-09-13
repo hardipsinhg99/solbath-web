@@ -1,0 +1,37 @@
+{
+  "collectionName": "components_home_cta_cards",
+  "info": {
+    "displayName": "CTA Card",
+    "icon": "cursor",
+    "description": "A single banner card in the homepage CTA band (e.g. \"Find a Dealer\")."
+  },
+  "options": {},
+  "attributes": {
+    "icon": {
+      "type": "enumeration",
+      "enum": ["map-pin", "download"],
+      "required": true
+    },
+    "heading": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "ctaLabel": {
+      "type": "string",
+      "required": true
+    },
+    "ctaHref": {
+      "type": "string",
+      "required": true
+    },
+    "variant": {
+      "type": "enumeration",
+      "enum": ["light", "dark"],
+      "required": true
+    }
+  }
+}

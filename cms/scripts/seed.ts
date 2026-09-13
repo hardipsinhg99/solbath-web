@@ -7,6 +7,7 @@ import { testimonials as staticTestimonials } from "../seed-data/testimonials";
 import { posts as staticPosts } from "../seed-data/posts";
 import { catalogs as staticCatalogs } from "../seed-data/catalogs";
 import { site } from "../seed-data/site";
+import { homePage } from "../seed-data/home";
 
 async function main() {
   const app = await compileStrapi();
@@ -25,7 +26,11 @@ async function main() {
           .documents("api::vertical.vertical")
           .update({
             documentId: existing.documentId,
-            data: { sortOrder: verticalSortOrder, isActive: true },
+            data: {
+              sortOrder: verticalSortOrder,
+              isActive: true,
+              heroDescription: meta.heroDescription,
+            },
           })
           .then((d) => d ?? existing)
       : await strapi.documents("api::vertical.vertical").create({
@@ -34,6 +39,7 @@ async function main() {
             name: meta.name,
             slug: meta.slug,
             tagline: meta.tagline,
+            heroDescription: meta.heroDescription,
             tone: meta.tone,
             sortOrder: verticalSortOrder,
             isActive: true,
@@ -261,6 +267,8 @@ async function main() {
     address: site.address,
     social: site.social,
     nav: site.nav,
+    footerTagline: site.footerTagline,
+    footerColumns: site.footerColumns,
   };
   if (existingSettings) {
     await strapi.documents("api::site-setting.site-setting").update({
@@ -269,6 +277,17 @@ async function main() {
     });
   } else {
     await strapi.documents("api::site-setting.site-setting").create({ data: settingsData });
+  }
+
+  console.log("Seeding Home Page...");
+  const existingHomePage = await strapi.documents("api::home-page.home-page").findFirst({});
+  if (existingHomePage) {
+    await strapi.documents("api::home-page.home-page").update({
+      documentId: existingHomePage.documentId,
+      data: homePage,
+    });
+  } else {
+    await strapi.documents("api::home-page.home-page").create({ data: homePage });
   }
 
   console.log("Seed complete.");

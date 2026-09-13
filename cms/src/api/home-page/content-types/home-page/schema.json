@@ -1,0 +1,92 @@
+{
+  "kind": "singleType",
+  "collectionName": "home_pages",
+  "info": {
+    "singularName": "home-page",
+    "pluralName": "home-pages",
+    "displayName": "Home Page",
+    "description": "Editable copy for the homepage: hero, trust strip, persona tiles, section headings and CTA band."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "heroEyebrow": {
+      "type": "string"
+    },
+    "heroHeading": {
+      "type": "string",
+      "required": true
+    },
+    "heroSubheading": {
+      "type": "text"
+    },
+    "heroVideo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["videos"]
+    },
+    "heroPrimaryCtaLabel": {
+      "type": "string"
+    },
+    "heroPrimaryCtaHref": {
+      "type": "string"
+    },
+    "heroSecondaryCtaLabel": {
+      "type": "string"
+    },
+    "heroSecondaryCtaHref": {
+      "type": "string"
+    },
+    "trustStats": {
+      "type": "component",
+      "repeatable": true,
+      "component": "home.stat-item"
+    },
+    "personaHeading": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.section-heading"
+    },
+    "personas": {
+      "type": "component",
+      "repeatable": true,
+      "component": "home.persona-item"
+    },
+    "featuredProductsHeading": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.section-heading"
+    },
+    "featuredProducts": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::product.product"
+    },
+    "featuredProductsCtaLabel": {
+      "type": "string"
+    },
+    "featuredProductsCtaHref": {
+      "type": "string"
+    },
+    "inspirationHeading": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.section-heading"
+    },
+    "inspirationCtaLabel": {
+      "type": "string"
+    },
+    "testimonialsHeading": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.section-heading"
+    },
+    "ctaCards": {
+      "type": "component",
+      "repeatable": true,
+      "component": "home.cta-card"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "collectionName": "components_home_stat_items",
+  "info": {
+    "displayName": "Stat Item",
+    "icon": "chart-bar",
+    "description": "A single trust-strip stat (e.g. \"15+ Years\" / \"Trusted craftsmanship\")."
+  },
+  "options": {},
+  "attributes": {
+    "icon": {
+      "type": "enumeration",
+      "enum": ["award", "users", "shield", "truck"],
+      "required": true
+    },
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "detail": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

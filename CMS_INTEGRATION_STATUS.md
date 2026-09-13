@@ -1,6 +1,6 @@
 # CMS Integration Status
 
-Last updated: 2026-08-20. Written so this can be revisited without re-deriving it from
+Last updated: 2026-08-21. Written so this can be revisited without re-deriving it from
 conversation history. If you're picking this back up later, read this whole file first.
 
 ## Current state: integration complete on this branch (`strapi`)
@@ -182,10 +182,11 @@ code.
 - [ ] Replace the seeded placeholder contact details (`hello@solbath.example`, etc.) via
       Site Settings in the Strapi admin.
 
-**Small code follow-ups, not blockers** (nothing to point them at yet, so not attempted):
-- Products/categories still render the procedural `Placeholder` component even though
-  `Product.images`/`Category.image` exist on the schema — once real product photos are
-  uploaded, swap `ProductCard`/`ProductGallery`/`CategoryShowcase` to prefer the real
-  image when present, falling back to `Placeholder` otherwise.
-- `CatalogDownloadButton.tsx` is still a placeholder ("Available after CMS setup") — wire
-  it to the real file URL once catalogue PDFs exist.
+**Small code follow-ups, not blockers**:
+- `ProductCard` and `ProductGallery` now prefer real `Product.images` from Strapi and
+  fall back to the procedural `Placeholder` component when no images are uploaded.
+- `Category.image` is mapped from Strapi, but the current category/vertical surfaces still
+  use the procedural placeholders. Once category art is uploaded and approved, wire those
+  pages to prefer the real image where it improves the layout.
+- `CatalogDownloadButton.tsx` now downloads the real `Catalog.file` URL when present and
+  shows a disabled "Pending upload" state until a PDF is attached in Strapi.

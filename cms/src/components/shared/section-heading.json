@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_shared_section_headings",
+  "info": {
+    "displayName": "Section Heading",
+    "icon": "heading",
+    "description": "A reusable eyebrow + title pair for a homepage section header."
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

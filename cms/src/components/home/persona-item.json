@@ -1,0 +1,32 @@
+{
+  "collectionName": "components_home_persona_items",
+  "info": {
+    "displayName": "Persona Item",
+    "icon": "user",
+    "description": "A single \"I'm a...\" tile on the homepage persona section."
+  },
+  "options": {},
+  "attributes": {
+    "icon": {
+      "type": "enumeration",
+      "enum": ["home", "architect", "dealer"],
+      "required": true
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "href": {
+      "type": "string",
+      "required": true
+    },
+    "ctaLabel": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

@@ -19,6 +19,7 @@ export interface Category {
     label: string;
     options: string[];
   }[];
+  image?: string;
 }
 
 export interface SpecRow {
@@ -40,6 +41,7 @@ export interface Product {
   tags: string[];
   featured?: boolean;
   isNew?: boolean;
+  images?: string[];
   tone: PlaceholderTone;
 }
 
@@ -80,4 +82,61 @@ export interface Catalog {
   vertical: Vertical | "all";
   fileSize: string;
   fileUrl?: string;
+}
+
+export interface SectionHeadingContent {
+  eyebrow?: string;
+  title: string;
+}
+
+export type StatIcon = "award" | "users" | "shield" | "truck";
+
+export interface TrustStat {
+  icon: StatIcon;
+  label: string;
+  detail: string;
+}
+
+export type PersonaIcon = "home" | "architect" | "dealer";
+
+export interface Persona {
+  icon: PersonaIcon;
+  title: string;
+  description: string;
+  href: string;
+  ctaLabel: string;
+}
+
+export type CtaCardIcon = "map-pin" | "download";
+export type CtaCardVariant = "light" | "dark";
+
+export interface CtaCard {
+  icon: CtaCardIcon;
+  heading: string;
+  description: string;
+  ctaLabel: string;
+  ctaHref: string;
+  variant: CtaCardVariant;
+}
+
+export interface HomePage {
+  heroEyebrow: string;
+  heroHeading: string;
+  heroSubheading: string;
+  heroVideoUrl?: string;
+  heroPrimaryCtaLabel: string;
+  heroPrimaryCtaHref: string;
+  heroSecondaryCtaLabel: string;
+  heroSecondaryCtaHref: string;
+  trustStats: TrustStat[];
+  personaHeading: SectionHeadingContent;
+  personas: Persona[];
+  featuredProductsHeading: SectionHeadingContent;
+  featuredProductSlugs: string[];
+  featuredProductsCtaLabel: string;
+  featuredProductsCtaHref: string;
+  inspirationHeading: SectionHeadingContent;
+  inspirationCtaLabel: string;
+  testimonialsHeading: SectionHeadingContent;
+  ctaCards: CtaCard[];
 }

@@ -4,7 +4,8 @@ import { getProductsByVertical } from "@/lib/data/products";
 import { Vertical } from "@/lib/types";
 import { HeaderClient, type MegaMenuVerticalItem } from "./HeaderClient";
 
-const verticalImages: Record<Vertical, { src: string; alt: string }> = {
+// Used only until an editor uploads a real heroImage for the vertical in Strapi.
+const FALLBACK_IMAGES: Record<Vertical, { src: string; alt: string }> = {
   "bathroom-accessories": {
     src: "/images/generated/menu-bathroom-accessories.png",
     alt: "Premium bathroom faucet and basin detail",
@@ -37,18 +38,20 @@ export async function Header() {
     verticalNavItems.map(async (item) => {
       const vertical = item.href.slice(1) as Vertical;
       const meta = verticalMeta[vertical];
-      const [categories, products] = await Promise.all([
-        getCategoriesByVertical(vertical),
-        getProductsByVertical(vertical),
-      ]);
-      const popular = products.filter((p) => p.featured || p.isNew).slice(0, 2);
+      const categories = await getCategoriesByVertical(vertical);
+
+      let popular = meta.popularProducts;
+      if (popular.length === 0) {
+        const products = await getProductsByVertical(vertical);
+        popular = products.filter((p) => p.featured || p.isNew).slice(0, 2);
+      }
 
       return {
         href: item.href,
         vertical,
         name: meta.name,
         tagline: meta.tagline,
-        image: verticalImages[vertical],
+        image: meta.image ?? FALLBACK_IMAGES[vertical],
         categories: categories.map((c) => ({
           slug: c.slug,
           name: c.name,

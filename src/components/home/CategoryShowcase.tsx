@@ -4,19 +4,9 @@ import { Container } from "@/components/ui/Container";
 import { Placeholder } from "@/components/ui/Placeholder";
 import { getVerticalMeta } from "@/lib/data/categories";
 
-const DESCRIPTIONS: Record<string, string> = {
-  "bathroom-accessories": "Faucets, showers and sanitaryware finished to a designer standard.",
-  "ceramic-tiles": "Floor, wall and large-format tiles in every texture and tone.",
-  hardware: "Door, cabinet and security hardware - the details that matter.",
-  kitchen: "Kitchen fittings, surfaces and storage for composed everyday use.",
-};
-
 export async function CategoryShowcase() {
   const verticalMeta = await getVerticalMeta();
-  const items = Object.values(verticalMeta).map((meta) => ({
-    ...meta,
-    description: DESCRIPTIONS[meta.slug] ?? "",
-  }));
+  const items = Object.values(verticalMeta);
 
   return (
     <section className="py-20 sm:py-28">

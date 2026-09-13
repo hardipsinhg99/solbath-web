@@ -5,36 +5,6 @@ import { Container } from "@/components/ui/Container";
 import { getSiteSettings } from "@/lib/data/site";
 import { InstagramIcon, FacebookIcon, YoutubeIcon } from "@/components/ui/SocialIcons";
 
-const columns = [
-  {
-    title: "Shop",
-    links: [
-      { label: "Bathroom Accessories", href: "/bathroom-accessories" },
-      { label: "Ceramic Tiles", href: "/ceramic-tiles" },
-      { label: "Hardware", href: "/hardware" },
-      { label: "Kitchen", href: "/kitchen" },
-      { label: "Inspiration", href: "/inspiration" },
-    ],
-  },
-  {
-    title: "For You",
-    links: [
-      { label: "Request a Quote", href: "/quote" },
-      { label: "My Selection", href: "/selection" },
-      { label: "Find a Dealer", href: "/dealers" },
-      { label: "Download Catalogues", href: "/catalogues" },
-    ],
-  },
-  {
-    title: "Company",
-    links: [
-      { label: "About SolBath", href: "/about" },
-      { label: "For Architects & Dealers", href: "/for-trade" },
-      { label: "Contact Us", href: "/contact" },
-    ],
-  },
-];
-
 export async function Footer() {
   const site = await getSiteSettings();
 
@@ -52,8 +22,7 @@ export async function Footer() {
             />
           </Link>
           <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/60">
-            Bathroom accessories, ceramic tiles, hardware and kitchen solutions for homes
-            and projects that expect more from every surface and fitting.
+            {site.footerTagline}
           </p>
           <div className="mt-6 space-y-2.5 text-sm text-white/70">
             <p className="flex items-start gap-2">
@@ -79,7 +48,7 @@ export async function Footer() {
           </div>
         </div>
 
-        {columns.map((col) => (
+        {site.footerColumns.map((col) => (
           <div key={col.title}>
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/45">
               {col.title}

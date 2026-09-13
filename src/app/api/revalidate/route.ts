@@ -14,6 +14,7 @@ const MODEL_TAGS: Record<string, string> = {
   "inspiration-post": "posts",
   catalog: "catalogs",
   "site-setting": "site-settings",
+  "home-page": "home-page",
 };
 
 export async function POST(request: NextRequest) {

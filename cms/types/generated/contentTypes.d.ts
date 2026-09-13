@@ -589,6 +589,65 @@ export interface ApiDealerDealer extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiHomePageHomePage extends Struct.SingleTypeSchema {
+  collectionName: 'home_pages';
+  info: {
+    description: 'Editable copy for the homepage: hero, trust strip, persona tiles, section headings and CTA band.';
+    displayName: 'Home Page';
+    pluralName: 'home-pages';
+    singularName: 'home-page';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    ctaCards: Schema.Attribute.Component<'home.cta-card', true>;
+    featuredProducts: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::product.product'
+    >;
+    featuredProductsCtaHref: Schema.Attribute.String;
+    featuredProductsCtaLabel: Schema.Attribute.String;
+    featuredProductsHeading: Schema.Attribute.Component<
+      'shared.section-heading',
+      false
+    >;
+    heroEyebrow: Schema.Attribute.String;
+    heroHeading: Schema.Attribute.String & Schema.Attribute.Required;
+    heroPrimaryCtaHref: Schema.Attribute.String;
+    heroPrimaryCtaLabel: Schema.Attribute.String;
+    heroSecondaryCtaHref: Schema.Attribute.String;
+    heroSecondaryCtaLabel: Schema.Attribute.String;
+    heroSubheading: Schema.Attribute.Text;
+    heroVideo: Schema.Attribute.Media<'videos'>;
+    inspirationCtaLabel: Schema.Attribute.String;
+    inspirationHeading: Schema.Attribute.Component<
+      'shared.section-heading',
+      false
+    >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::home-page.home-page'
+    > &
+      Schema.Attribute.Private;
+    personaHeading: Schema.Attribute.Component<'shared.section-heading', false>;
+    personas: Schema.Attribute.Component<'home.persona-item', true>;
+    publishedAt: Schema.Attribute.DateTime;
+    testimonialsHeading: Schema.Attribute.Component<
+      'shared.section-heading',
+      false
+    >;
+    trustStats: Schema.Attribute.Component<'home.stat-item', true>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiInspirationPostInspirationPost
   extends Struct.CollectionTypeSchema {
   collectionName: 'inspiration_posts';
@@ -735,6 +794,8 @@ export interface ApiSiteSettingSiteSetting extends Struct.SingleTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     email: Schema.Attribute.Email & Schema.Attribute.Required;
+    footerColumns: Schema.Attribute.Component<'shared.footer-column', true>;
+    footerTagline: Schema.Attribute.Text;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -816,6 +877,10 @@ export interface ApiVerticalVertical extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     name: Schema.Attribute.String & Schema.Attribute.Required;
+    popularProducts: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::product.product'
+    >;
     publishedAt: Schema.Attribute.DateTime;
     seoDescription: Schema.Attribute.Text;
     seoTitle: Schema.Attribute.String;
@@ -1344,6 +1409,7 @@ declare module '@strapi/strapi' {
       'api::category.category': ApiCategoryCategory;
       'api::contact-submission.contact-submission': ApiContactSubmissionContactSubmission;
       'api::dealer.dealer': ApiDealerDealer;
+      'api::home-page.home-page': ApiHomePageHomePage;
       'api::inspiration-post.inspiration-post': ApiInspirationPostInspirationPost;
       'api::product.product': ApiProductProduct;
       'api::quote-submission.quote-submission': ApiQuoteSubmissionQuoteSubmission;

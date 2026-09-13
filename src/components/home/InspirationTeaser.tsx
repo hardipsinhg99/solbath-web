@@ -5,23 +5,24 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Placeholder } from "@/components/ui/Placeholder";
 import { getPosts } from "@/lib/data/posts";
+import { getHomePage } from "@/lib/data/home";
 
 export async function InspirationTeaser() {
-  const posts = await getPosts();
+  const [posts, home] = await Promise.all([getPosts(), getHomePage()]);
 
   return (
     <section className="py-20 sm:py-28">
       <Container>
         <div className="flex flex-wrap items-end justify-between gap-6">
           <SectionHeading
-            eyebrow="Inspiration"
-            title="Ideas for every room, from our design desk"
+            eyebrow={home.inspirationHeading.eyebrow}
+            title={home.inspirationHeading.title}
           />
           <Link
             href="/inspiration"
             className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.1em] text-accent hover:text-accent-dark"
           >
-            View All Stories <ArrowRight size={14} />
+            {home.inspirationCtaLabel} <ArrowRight size={14} />
           </Link>
         </div>
 

@@ -55,7 +55,7 @@ export default async function ProductPage({ params }: PageProps<"/product/[slug]
           </p>
 
           <div className="mt-6 grid gap-12 lg:grid-cols-2">
-            <ProductGallery tone={product.tone} name={product.name} />
+            <ProductGallery tone={product.tone} name={product.name} images={product.images} />
 
             <div>
               <div className="flex flex-wrap gap-2">

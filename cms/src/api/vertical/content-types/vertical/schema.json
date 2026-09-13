@@ -43,6 +43,11 @@
       "multiple": false,
       "allowedTypes": ["images"]
     },
+    "popularProducts": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::product.product"
+    },
     "sortOrder": {
       "type": "integer",
       "default": 0
