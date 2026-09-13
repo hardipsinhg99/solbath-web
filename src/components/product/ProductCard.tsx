@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Plus, Check } from "lucide-react";
 import { Product } from "@/lib/types";
 import { Placeholder } from "@/components/ui/Placeholder";
@@ -10,18 +11,29 @@ import { useSelection } from "@/components/selection-context";
 export function ProductCard({ product }: { product: Product }) {
   const { add, has } = useSelection();
   const added = has(product.slug);
+  const image = product.images?.[0];
 
   return (
     <div className="group flex flex-col">
       <Link
         href={`/product/${product.slug}`}
-        className="relative block aspect-[4/5] overflow-hidden rounded-none"
+        className="relative block aspect-[4/5] overflow-hidden rounded-none bg-white"
       >
-        <Placeholder
-          tone={product.tone}
-          label={product.collection}
-          className="h-full w-full transition-transform duration-300 group-hover:scale-[1.04]"
-        />
+        {image ? (
+          <Image
+            src={image}
+            alt={product.name}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 25vw"
+            className="object-contain transition-transform duration-300 group-hover:scale-[1.04]"
+          />
+        ) : (
+          <Placeholder
+            tone={product.tone}
+            label={product.collection}
+            className="h-full w-full transition-transform duration-300 group-hover:scale-[1.04]"
+          />
+        )}
         <div className="absolute left-3 top-3 flex flex-col gap-1.5">
           {product.isNew ? <Badge tone="ink">New</Badge> : null}
           {product.tags.includes("Bestseller") ? <Badge tone="accent">Bestseller</Badge> : null}
