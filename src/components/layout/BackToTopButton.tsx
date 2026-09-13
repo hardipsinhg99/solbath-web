@@ -48,7 +48,7 @@ export function BackToTopButton() {
       title="Back to top"
       tabIndex={visible ? 0 : -1}
       onClick={scrollToTop}
-      className={`fixed bottom-24 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-none border border-white/70 bg-white/90 text-ink shadow-[0_16px_36px_rgba(16,25,43,0.18)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-accent hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent dark:border-white/10 dark:bg-navy/88 dark:text-white dark:hover:bg-accent ${
+      className={`fixed bottom-24 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-none border border-white/70 bg-white/90 text-ink shadow-[0_16px_36px_rgba(16,25,43,0.18)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-accent hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
         visible
           ? "translate-y-0 opacity-100"
           : "translate-y-3 pointer-events-none opacity-0"

@@ -1,7 +1,5 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
-
 :root {
   --background: #ffffff;
   --foreground: #10192b;
@@ -22,25 +20,6 @@
 
   --font-heading: var(--font-manrope);
   --font-body: var(--font-inter);
-}
-
-.dark {
-  --background: #0a1420;
-  --foreground: #eaf2fb;
-
-  --color-ink: #eaf2fb;
-  --color-ink-soft: #8fa6c2;
-  --color-stone: #121f30;
-  --color-stone-dark: #1a2c42;
-  --color-border: #223349;
-  --color-accent: #4c9fec;
-  --color-accent-dark: #2e86de;
-  --color-accent-soft: #15283f;
-  --color-navy: #15385e;
-  --color-cream: #0f1d2e;
-  --color-white: #ffffff;
-  --color-success: #34c486;
-  --color-error: #f0685a;
 }
 
 @theme inline {
@@ -68,7 +47,6 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-body), system-ui, sans-serif;
-  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 h1, h2, h3, h4,

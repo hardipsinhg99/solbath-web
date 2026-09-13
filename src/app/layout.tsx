@@ -6,7 +6,6 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
 import { BackToTopButton } from "@/components/layout/BackToTopButton";
-import { ThemeProvider } from "@/components/theme-provider";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -33,21 +32,18 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      suppressHydrationWarning
       className={`${manrope.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-ink">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <SelectionProvider>
-            <Header />
-            <main id="main-content" tabIndex={-1} className="flex-1 focus:outline-none">
-              {children}
-            </main>
-            <Footer />
-            <BackToTopButton />
-            <WhatsAppButton />
-          </SelectionProvider>
-        </ThemeProvider>
+        <SelectionProvider>
+          <Header />
+          <main id="main-content" tabIndex={-1} className="flex-1 focus:outline-none">
+            {children}
+          </main>
+          <Footer />
+          <BackToTopButton />
+          <WhatsAppButton />
+        </SelectionProvider>
       </body>
     </html>
   );

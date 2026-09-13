@@ -133,33 +133,33 @@ export function ProductsMegaMenu({ verticals, triggerClassName }: ProductsMegaMe
         <ChevronDown
           size={14}
           strokeWidth={1.8}
-          className={`transition-transform duration-200 ${open ? "rotate-180 text-accent-dark dark:text-white" : ""}`}
+          className={`transition-transform duration-200 ${open ? "rotate-180 text-accent-dark" : ""}`}
         />
       </button>
 
       <div
         ref={wrapperRef}
-        className="fixed left-1/2 w-[min(1120px,calc(100vw-48px))] -translate-x-1/2"
+        className="invisible fixed left-1/2 w-[min(1120px,calc(100vw-48px))] -translate-x-1/2 opacity-0"
       >
         <div
           ref={panelRef}
-          className="overflow-hidden rounded-none border border-border/90 bg-white shadow-[0_34px_90px_rgba(16,25,43,0.24)] ring-1 ring-white/80 dark:border-white/10 dark:bg-[#071423] dark:ring-white/10 dark:shadow-[0_30px_80px_rgba(0,0,0,0.52)]"
+          className="overflow-hidden rounded-none border border-border/90 bg-white shadow-[0_34px_90px_rgba(16,25,43,0.24)] ring-1 ring-white/80"
         >
           <div
             ref={topBarRef}
-            className="flex items-center justify-between border-b border-border bg-stone/45 px-5 py-3 dark:border-white/10 dark:bg-white/[0.035]"
+            className="flex items-center justify-between border-b border-border bg-stone/45 px-5 py-3"
           >
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-accent-dark dark:text-white/66">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-accent-dark">
                 Product Library
               </p>
-              <p className="mt-1 text-sm font-semibold text-ink dark:text-white">
+              <p className="mt-1 text-sm font-semibold text-ink">
                 Browse complete ranges by room, surface and detail.
               </p>
             </div>
             <Link
               href="/catalogues"
-              className="flex items-center gap-1.5 rounded-none border border-border bg-white px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-soft transition-all hover:-translate-y-px hover:border-accent hover:text-accent-dark focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent dark:border-white/10 dark:bg-white/[0.06] dark:text-white/75 dark:hover:text-white"
+              className="flex items-center gap-1.5 rounded-none border border-border bg-white px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-soft transition-all hover:-translate-y-px hover:border-accent hover:text-accent-dark focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
             >
               Catalogues <ArrowUpRight size={13} />
             </Link>
@@ -169,7 +169,7 @@ export function ProductsMegaMenu({ verticals, triggerClassName }: ProductsMegaMe
               <div
                 key={item.href}
                 ref={setCardRef(index)}
-                className="bg-white p-4 transition-colors hover:bg-stone/40 dark:bg-[#071423] dark:hover:bg-white/[0.035]"
+                className="bg-white p-4 transition-colors hover:bg-stone/40"
               >
                 <Link
                   href={item.href}
@@ -194,7 +194,7 @@ export function ProductsMegaMenu({ verticals, triggerClassName }: ProductsMegaMe
                 </Link>
 
                 <div className="mt-4">
-                  <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-ink-soft dark:text-white/55">
+                  <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-ink-soft">
                     Shop by category
                   </p>
                   <div className="grid gap-1">
@@ -202,9 +202,9 @@ export function ProductsMegaMenu({ verticals, triggerClassName }: ProductsMegaMe
                       <Link
                         key={category.slug}
                         href={`/${item.vertical}/${category.slug}`}
-                        className="group/item rounded-none px-2 py-2 transition-all duration-300 ease-out hover:bg-white hover:shadow-[inset_2px_0_0_var(--color-accent)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent dark:hover:bg-white/[0.08]"
+                        className="group/item rounded-none px-2 py-2 transition-all duration-300 ease-out hover:bg-white hover:shadow-[inset_2px_0_0_var(--color-accent)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                       >
-                        <span className="flex items-center justify-between gap-2 text-[13px] font-semibold leading-snug tracking-[0.01em] text-ink dark:text-white">
+                        <span className="flex items-center justify-between gap-2 text-[13px] font-semibold leading-snug tracking-[0.01em] text-ink">
                           {category.name}
                           <ArrowUpRight
                             size={12}
@@ -217,8 +217,8 @@ export function ProductsMegaMenu({ verticals, triggerClassName }: ProductsMegaMe
                 </div>
 
                 {item.popular.length > 0 ? (
-                  <div className="mt-4 border-t border-border pt-3 dark:border-white/10">
-                    <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-ink-soft dark:text-white/55">
+                  <div className="mt-4 border-t border-border pt-3">
+                    <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-ink-soft">
                       Popular
                     </p>
                     <div className="grid gap-1">
@@ -226,7 +226,7 @@ export function ProductsMegaMenu({ verticals, triggerClassName }: ProductsMegaMe
                         <Link
                           key={product.slug}
                           href={`/product/${product.slug}`}
-                          className="block rounded-none px-2 py-1.5 text-[12px] font-medium leading-snug text-ink-soft transition-colors hover:bg-white hover:text-accent-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent dark:text-white/60 dark:hover:bg-white/[0.08] dark:hover:text-white"
+                          className="block rounded-none px-2 py-1.5 text-[12px] font-medium leading-snug text-ink-soft transition-colors hover:bg-white hover:text-accent-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                         >
                           {product.name}
                         </Link>

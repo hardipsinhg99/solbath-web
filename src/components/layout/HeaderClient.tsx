@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { useSelection } from "@/components/selection-context";
-import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { ProductsMegaMenu, type MegaMenuVerticalItem } from "./ProductsMegaMenu";
 
 export type { MegaMenuVerticalItem };
@@ -22,8 +21,8 @@ export type { MegaMenuVerticalItem };
 function navLinkClass(active: boolean) {
   return `group/nav relative flex items-center gap-1.5 whitespace-nowrap rounded-none px-3.5 py-2.5 text-[12px] font-semibold uppercase leading-none tracking-[0.12em] transition-all duration-200 after:absolute after:inset-x-3.5 after:bottom-1.5 after:h-px after:origin-left after:scale-x-0 after:bg-accent after:transition-transform after:duration-200 hover:-translate-y-px hover:after:scale-x-100 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent ${
     active
-      ? "bg-accent-soft/90 text-accent-dark shadow-[inset_0_0_0_1px_rgba(30,111,217,0.14),0_10px_26px_rgba(30,111,217,0.08)] after:scale-x-100 dark:bg-white/[0.09] dark:text-white dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]"
-      : "text-ink-soft hover:bg-white/82 hover:text-ink hover:shadow-[0_10px_24px_rgba(16,25,43,0.07)] dark:text-white/68 dark:hover:bg-white/[0.08] dark:hover:text-white dark:hover:shadow-none"
+      ? "bg-accent-soft/90 text-accent-dark shadow-[inset_0_0_0_1px_rgba(30,111,217,0.14),0_10px_26px_rgba(30,111,217,0.08)] after:scale-x-100"
+      : "text-ink-soft hover:bg-white/82 hover:text-ink hover:shadow-[0_10px_24px_rgba(16,25,43,0.07)]"
   }`;
 }
 
@@ -63,7 +62,7 @@ export function HeaderClient({ phone, megaMenuVerticals, secondaryNav }: HeaderC
   }, [open]);
 
   return (
-    <div className="sticky top-0 z-[120] border-b border-border/80 bg-white/86 text-ink shadow-[0_18px_48px_rgba(16,25,43,0.10)] backdrop-blur-2xl dark:border-white/10 dark:bg-[#071423]/88 dark:text-white dark:shadow-[0_18px_54px_rgba(0,0,0,0.30)]">
+    <div className="sticky top-0 z-[120] border-b border-border/80 bg-white/86 text-ink shadow-[0_18px_48px_rgba(16,25,43,0.10)] backdrop-blur-2xl">
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[200] focus:rounded-none focus:bg-accent focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white focus:outline-none"
@@ -83,15 +82,7 @@ export function HeaderClient({ phone, megaMenuVerticals, secondaryNav }: HeaderC
               width={461}
               height={129}
               priority
-              className="h-9 w-auto object-contain min-[360px]:h-11 sm:h-12 dark:hidden"
-            />
-            <Image
-              src="/logo.png"
-              alt="SolBath Global Private Limited"
-              width={460}
-              height={127}
-              priority
-              className="hidden h-9 w-auto object-contain min-[360px]:h-11 dark:block dark:sm:h-12"
+              className="h-9 w-auto object-contain min-[360px]:h-11 sm:h-12"
             />
           </Link>
 
@@ -115,7 +106,7 @@ export function HeaderClient({ phone, megaMenuVerticals, secondaryNav }: HeaderC
           <div className="hidden items-center gap-3 xl:flex">
             <Link
               href="/selection"
-              className="relative flex items-center gap-2 whitespace-nowrap rounded-none px-3.5 py-2.5 text-[13px] font-medium tracking-[0.01em] text-ink-soft transition-all duration-200 hover:-translate-y-px hover:bg-stone hover:text-accent-dark hover:shadow-[0_10px_24px_rgba(16,25,43,0.07)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent dark:text-white/75 dark:hover:bg-white/[0.08] dark:hover:text-white dark:hover:shadow-none"
+              className="relative flex items-center gap-2 whitespace-nowrap rounded-none px-3.5 py-2.5 text-[13px] font-medium tracking-[0.01em] text-ink-soft transition-all duration-200 hover:-translate-y-px hover:bg-stone hover:text-accent-dark hover:shadow-[0_10px_24px_rgba(16,25,43,0.07)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
             >
               <ClipboardList size={18} strokeWidth={1.75} />
               My Selection
@@ -137,7 +128,7 @@ export function HeaderClient({ phone, megaMenuVerticals, secondaryNav }: HeaderC
             <Link
               href="/selection"
               aria-label="My Selection"
-              className="relative flex h-9 w-9 items-center justify-center rounded-none text-ink-soft transition-colors hover:bg-stone hover:text-accent-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent min-[360px]:h-10 min-[360px]:w-10 dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
+              className="relative flex h-9 w-9 items-center justify-center rounded-none text-ink-soft transition-colors hover:bg-stone hover:text-accent-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent min-[360px]:h-10 min-[360px]:w-10"
               onClick={() => setOpen(false)}
             >
               <ClipboardList size={18} strokeWidth={1.75} />
@@ -147,7 +138,6 @@ export function HeaderClient({ phone, megaMenuVerticals, secondaryNav }: HeaderC
                 </span>
               ) : null}
             </Link>
-            <ThemeToggle className="text-ink-soft hover:bg-stone hover:text-accent-dark dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white" />
             <button
               type="button"
               aria-label="Toggle navigation menu"
@@ -168,8 +158,8 @@ export function HeaderClient({ phone, megaMenuVerticals, secondaryNav }: HeaderC
               className="absolute inset-0 cursor-default bg-navy/42 backdrop-blur-sm"
               onClick={() => setOpen(false)}
             />
-            <aside className="absolute right-0 top-0 flex h-[100dvh] w-[min(92vw,390px)] flex-col border-l border-border bg-white text-ink shadow-[0_30px_90px_rgba(16,25,43,0.28)] dark:border-white/10 dark:bg-[#071423] dark:text-white">
-              <div className="flex min-h-16 shrink-0 items-center justify-between gap-3 border-b border-border bg-stone/35 px-4 dark:border-white/10 dark:bg-white/[0.035]">
+            <aside className="absolute right-0 top-0 flex h-[100dvh] w-[min(92vw,390px)] flex-col border-l border-border bg-white text-ink shadow-[0_30px_90px_rgba(16,25,43,0.28)]">
+              <div className="flex min-h-16 shrink-0 items-center justify-between gap-3 border-b border-border bg-stone/35 px-4">
                 <Link
                   href="/"
                   className="flex min-w-0 items-center focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
@@ -181,15 +171,7 @@ export function HeaderClient({ phone, megaMenuVerticals, secondaryNav }: HeaderC
                     width={461}
                     height={129}
                     priority
-                    className="h-9 w-auto max-w-[180px] object-contain dark:hidden"
-                  />
-                  <Image
-                    src="/logo.png"
-                    alt="SolBath Global Private Limited"
-                    width={460}
-                    height={127}
-                    priority
-                    className="hidden h-9 w-auto max-w-[180px] object-contain dark:block"
+                    className="h-9 w-auto max-w-[180px] object-contain"
                   />
                 </Link>
                 <button
@@ -204,10 +186,9 @@ export function HeaderClient({ phone, megaMenuVerticals, secondaryNav }: HeaderC
 
               <div className="flex-1 overflow-y-auto px-4 py-4">
                 <div className="mb-3 flex items-center justify-between">
-                  <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-accent-dark dark:text-white/66">
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-accent-dark">
                     Products
                   </span>
-                  <ThemeToggle className="text-ink-soft hover:bg-stone hover:text-accent-dark dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white" />
                 </div>
 
                 <div className="grid gap-2">
@@ -217,7 +198,7 @@ export function HeaderClient({ phone, megaMenuVerticals, secondaryNav }: HeaderC
                     return (
                       <div
                         key={item.href}
-                        className="group/mobile overflow-hidden rounded-none border border-border bg-white shadow-[0_10px_24px_rgba(16,25,43,0.08)] transition-colors dark:border-white/10 dark:bg-[#071423] dark:shadow-none"
+                        className="group/mobile overflow-hidden rounded-none border border-border bg-white shadow-[0_10px_24px_rgba(16,25,43,0.08)] transition-colors"
                       >
                         <button
                           type="button"
@@ -254,11 +235,11 @@ export function HeaderClient({ phone, megaMenuVerticals, secondaryNav }: HeaderC
                         </button>
 
                         {expanded ? (
-                          <div className="border-t border-border bg-white p-2 dark:border-white/10 dark:bg-[#071423]">
+                          <div className="border-t border-border bg-white p-2">
                             <Link
                               href={item.href}
                               onClick={() => setOpen(false)}
-                              className="mb-1 flex items-center justify-between rounded-none px-3 py-2.5 text-xs font-semibold uppercase tracking-[0.12em] text-accent hover:bg-stone focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent dark:text-white/85 dark:hover:bg-white/10"
+                              className="mb-1 flex items-center justify-between rounded-none px-3 py-2.5 text-xs font-semibold uppercase tracking-[0.12em] text-accent hover:bg-stone focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                             >
                               View all {item.name}
                               <ArrowUpRight size={14} />
@@ -268,12 +249,12 @@ export function HeaderClient({ phone, megaMenuVerticals, secondaryNav }: HeaderC
                                 key={category.slug}
                                 href={`/${item.vertical}/${category.slug}`}
                                 onClick={() => setOpen(false)}
-                                className="block rounded-none px-3 py-2.5 transition-colors hover:bg-stone focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent dark:hover:bg-white/10"
+                                className="block rounded-none px-3 py-2.5 transition-colors hover:bg-stone focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                               >
-                                <span className="block text-sm font-semibold tracking-[0.01em] text-ink dark:text-white">
+                                <span className="block text-sm font-semibold tracking-[0.01em] text-ink">
                                   {category.name}
                                 </span>
-                                <span className="mt-0.5 block text-xs text-ink-soft dark:text-white/55">
+                                <span className="mt-0.5 block text-xs text-ink-soft">
                                   {category.description}
                                 </span>
                               </Link>
@@ -285,7 +266,7 @@ export function HeaderClient({ phone, megaMenuVerticals, secondaryNav }: HeaderC
                   })}
                 </div>
 
-                <div className="mt-4 grid gap-1 border-t border-border pt-4 dark:border-white/10">
+                <div className="mt-4 grid gap-1 border-t border-border pt-4">
                   {secondaryNav.map((item) => (
                     <Link
                       key={item.href}
@@ -293,8 +274,8 @@ export function HeaderClient({ phone, megaMenuVerticals, secondaryNav }: HeaderC
                       onClick={() => setOpen(false)}
                       className={`rounded-none px-4 py-3 text-sm font-semibold tracking-[0.01em] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
                         isActive(item.href)
-                          ? "bg-accent-soft text-accent-dark dark:bg-white/10 dark:text-white"
-                          : "text-ink hover:bg-stone hover:text-accent-dark dark:text-white/85 dark:hover:bg-white/10 dark:hover:text-white"
+                          ? "bg-accent-soft text-accent-dark"
+                          : "text-ink hover:bg-stone hover:text-accent-dark"
                       }`}
                     >
                       {item.label}
@@ -305,33 +286,33 @@ export function HeaderClient({ phone, megaMenuVerticals, secondaryNav }: HeaderC
                     onClick={() => setOpen(false)}
                     className={`rounded-none px-4 py-3 text-sm font-semibold tracking-[0.01em] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
                       isActive("/dealers")
-                        ? "bg-accent-soft text-accent-dark dark:bg-white/10 dark:text-white"
-                        : "text-ink hover:bg-stone hover:text-accent-dark dark:text-white/85 dark:hover:bg-white/10 dark:hover:text-white"
+                        ? "bg-accent-soft text-accent-dark"
+                        : "text-ink hover:bg-stone hover:text-accent-dark"
                     }`}
                   >
                     Find a Dealer
                   </Link>
                 </div>
 
-                <div className="mt-4 grid gap-1 rounded-none border border-border bg-stone/50 p-2 dark:border-white/10 dark:bg-white/[0.04]">
+                <div className="mt-4 grid gap-1 rounded-none border border-border bg-stone/50 p-2">
                   <a
                     href={`tel:${phone}`}
                     onClick={() => setOpen(false)}
-                    className="flex items-center gap-2 rounded-none px-3 py-2.5 text-sm font-medium text-ink-soft hover:bg-white hover:text-accent-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent dark:text-white/75 dark:hover:bg-white/10 dark:hover:text-white"
+                    className="flex items-center gap-2 rounded-none px-3 py-2.5 text-sm font-medium text-ink-soft hover:bg-white hover:text-accent-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                   >
                     <Phone size={16} /> {phone}
                   </a>
                   <Link
                     href="/selection"
                     onClick={() => setOpen(false)}
-                    className="flex items-center gap-2 rounded-none px-3 py-2.5 text-sm font-medium text-ink-soft hover:bg-white hover:text-accent-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent dark:text-white/75 dark:hover:bg-white/10 dark:hover:text-white"
+                    className="flex items-center gap-2 rounded-none px-3 py-2.5 text-sm font-medium text-ink-soft hover:bg-white hover:text-accent-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                   >
                     <ClipboardList size={16} /> My Selection {items.length > 0 ? `(${items.length})` : ""}
                   </Link>
                 </div>
               </div>
 
-              <div className="shrink-0 border-t border-border bg-white p-4 dark:border-white/10 dark:bg-[#071423]">
+              <div className="shrink-0 border-t border-border bg-white p-4">
                 <Link
                   href="/quote"
                   onClick={() => setOpen(false)}
