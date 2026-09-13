@@ -1,0 +1,11 @@
+# Paths are relative to the build context (cms/).
+node_modules
+.tmp
+dist
+build
+.strapi
+.cache
+.env
+.env.*
+!.env.example
+public/uploads/*

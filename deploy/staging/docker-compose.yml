@@ -1,0 +1,116 @@
+# Solbath staging - test.solbath.com (web) + test-api.solbath.com (cms).
+#
+# Runs on a shared VPS behind Coolify's Traefik (container `coolify-proxy`),
+# which routes by Docker labels on the external `coolify` network and issues
+# certs through its `letsencrypt` resolver. Nothing here touches the proxy.
+#
+# - Images are built OFF the box and loaded with `docker load`; this file is
+#   only ever used with `up -d --no-build` (pull_policy: never enforces it).
+# - Secrets and data live outside the git checkout, in /opt/solbath-staging,
+#   so paths below are absolute.
+# - Every Traefik router/middleware/service name is prefixed `solbath-`:
+#   a duplicate router name anywhere on the box disables BOTH routers.
+name: solbath-staging
+
+services:
+  # ---------------------------------------------------------------- db ------
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    env_file: [/opt/solbath-staging/db.env]
+    volumes:
+      - /opt/solbath-staging/data/db:/var/lib/postgresql/data
+    # Internal network only, and no `ports:` - Postgres is unreachable from the
+    # host's public interfaces and from every other stack.
+    networks: [internal]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+
+  # --------------------------------------------------------------- cms ------
+  cms:
+    image: solbath-staging-cms:latest
+    pull_policy: never
+    restart: unless-stopped
+    env_file: [/opt/solbath-staging/cms.env]
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - /opt/solbath-staging/data/uploads:/app/public/uploads
+    ports:
+      - "127.0.0.1:1340:1337" # host-side health checks only
+    networks: [internal, coolify]
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=coolify
+
+      - traefik.http.middlewares.solbath-api-https.redirectscheme.scheme=https
+      - traefik.http.middlewares.solbath-api-https.redirectscheme.permanent=true
+      - traefik.http.middlewares.solbath-api-noindex.headers.customresponseheaders.X-Robots-Tag=noindex, nofollow, noarchive
+
+      - traefik.http.routers.solbath-api.rule=Host(`test-api.solbath.com`)
+      - traefik.http.routers.solbath-api.entrypoints=https
+      - traefik.http.routers.solbath-api.tls=true
+      - traefik.http.routers.solbath-api.tls.certresolver=letsencrypt
+      - traefik.http.routers.solbath-api.middlewares=solbath-api-noindex@docker
+      - traefik.http.routers.solbath-api.service=solbath-api
+
+      - traefik.http.routers.solbath-api-http.rule=Host(`test-api.solbath.com`)
+      - traefik.http.routers.solbath-api-http.entrypoints=http
+      - traefik.http.routers.solbath-api-http.middlewares=solbath-api-https@docker
+      - traefik.http.routers.solbath-api-http.service=solbath-api
+
+      - traefik.http.services.solbath-api.loadbalancer.server.port=1337
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+
+  # --------------------------------------------------------------- web ------
+  web:
+    image: solbath-staging-web:latest
+    pull_policy: never
+    restart: unless-stopped
+    env_file: [/opt/solbath-staging/web.env]
+    depends_on: [cms]
+    ports:
+      - "127.0.0.1:3310:3000" # host-side health checks only
+    networks: [internal, coolify]
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=coolify
+
+      - traefik.http.middlewares.solbath-web-https.redirectscheme.scheme=https
+      - traefik.http.middlewares.solbath-web-https.redirectscheme.permanent=true
+      - traefik.http.middlewares.solbath-web-noindex.headers.customresponseheaders.X-Robots-Tag=noindex, nofollow, noarchive
+
+      - traefik.http.routers.solbath-web.rule=Host(`test.solbath.com`)
+      - traefik.http.routers.solbath-web.entrypoints=https
+      - traefik.http.routers.solbath-web.tls=true
+      - traefik.http.routers.solbath-web.tls.certresolver=letsencrypt
+      - traefik.http.routers.solbath-web.middlewares=solbath-web-noindex@docker
+      - traefik.http.routers.solbath-web.service=solbath-web
+
+      - traefik.http.routers.solbath-web-http.rule=Host(`test.solbath.com`)
+      - traefik.http.routers.solbath-web-http.entrypoints=http
+      - traefik.http.routers.solbath-web-http.middlewares=solbath-web-https@docker
+      - traefik.http.routers.solbath-web-http.service=solbath-web
+
+      - traefik.http.services.solbath-web.loadbalancer.server.port=3000
+    deploy:
+      resources:
+        limits:
+          memory: 768m
+
+networks:
+  internal:
+    driver: bridge
+  coolify:
+    external: true

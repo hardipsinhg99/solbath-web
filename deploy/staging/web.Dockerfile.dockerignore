@@ -1,0 +1,10 @@
+# Paths are relative to the build context (repo root).
+node_modules
+.next
+.git
+cms
+deploy
+docker-compose*.yml
+.env
+.env.*
+!.env.example

@@ -1,6 +1,6 @@
 import type { Core } from '@strapi/strapi';
 
-const config: Core.Config.Middlewares = [
+const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Middlewares => [
   'strapi::logger',
   'strapi::errors',
   {
@@ -16,7 +16,14 @@ const config: Core.Config.Middlewares = [
       },
     },
   },
-  'strapi::cors',
+  // CORS_ORIGIN: comma-separated allowed origins (e.g. https://test.solbath.com).
+  // Unset keeps Strapi's default ('*') for local dev.
+  {
+    name: 'strapi::cors',
+    config: {
+      origin: env.array('CORS_ORIGIN', ['*']),
+    },
+  },
   'strapi::poweredBy',
   'strapi::query',
   'strapi::body',
