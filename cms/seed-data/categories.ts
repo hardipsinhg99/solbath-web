@@ -38,38 +38,16 @@ export const categories: Category[] = [
     ],
   },
 
-  // Ceramic Tiles
   {
-    slug: "floor-tiles",
-    vertical: "ceramic-tiles",
-    name: "Floor Tiles",
-    tagline: "Underfoot elegance for every room in the house.",
-    description: "Vitrified and ceramic floor tiles in glossy, matte and lustre finishes.",
+    slug: "towel-racks",
+    vertical: "bathroom-accessories",
+    name: "Towel Racks & Holders",
+    tagline: "Considered storage for every bath.",
+    description:
+      "Folding, dual and fixed towel racks in stainless steel and aluminium, built for daily use.",
     filters: [
-      { label: "Size", options: ["600x600", "600x1200", "800x800"] },
-      { label: "Finish", options: ["Glossy", "Matte", "Lustre"] },
-    ],
-  },
-  {
-    slug: "wall-tiles",
-    vertical: "ceramic-tiles",
-    name: "Wall Tiles",
-    tagline: "Texture and tone for kitchens, baths and beyond.",
-    description: "Decorative and structural wall tiles for interiors and facades.",
-    filters: [
-      { label: "Size", options: ["300x600", "300x450", "600x600"] },
-      { label: "Finish", options: ["Glossy", "Matte", "Metallic"] },
-    ],
-  },
-  {
-    slug: "large-format",
-    vertical: "ceramic-tiles",
-    name: "Large Format Slabs",
-    tagline: "Seamless, monolithic surfaces for statement spaces.",
-    description: "Large-format porcelain slabs for floors, walls and countertops.",
-    filters: [
-      { label: "Size", options: ["1200x2400", "1600x3200"] },
-      { label: "Finish", options: ["Polished", "Honed"] },
+      { label: "Material", options: ["Stainless Steel", "Aluminium"] },
+      { label: "Finish", options: ["Chrome", "Black"] },
     ],
   },
 
@@ -83,17 +61,6 @@ export const categories: Category[] = [
     filters: [
       { label: "Type", options: ["Handles", "Hinges", "Locksets", "Closers"] },
       { label: "Finish", options: ["Matte Black", "Antique Brass", "Stainless Steel"] },
-    ],
-  },
-  {
-    slug: "cabinet-hardware",
-    vertical: "hardware",
-    name: "Cabinet & Furniture Hardware",
-    tagline: "Small details, disproportionate impact.",
-    description: "Handles, knobs, channel profiles and soft-close hinges for cabinetry.",
-    filters: [
-      { label: "Type", options: ["Handles", "Knobs", "Channel Handles", "Hinges"] },
-      { label: "Finish", options: ["Matte Black", "Brushed Brass", "Stainless Steel"] },
     ],
   },
   {
@@ -121,58 +88,44 @@ export const categories: Category[] = [
       { label: "Finish", options: ["Chrome", "Brushed Steel", "Matte Black", "Gunmetal"] },
     ],
   },
-  {
-    slug: "kitchen-surfaces-backsplashes",
-    vertical: "kitchen",
-    name: "Surfaces & Backsplashes",
-    tagline: "Countertops and backsplashes that make the kitchen feel composed.",
-    description:
-      "Porcelain slabs, backsplash tiles and stone-look surfaces for durable, easy-clean kitchens.",
-    filters: [
-      { label: "Application", options: ["Countertop", "Backsplash", "Wall Cladding"] },
-      { label: "Finish", options: ["Polished", "Matte", "Textured", "Glossy"] },
-    ],
-  },
-  {
-    slug: "kitchen-storage-hardware",
-    vertical: "kitchen",
-    name: "Storage & Cabinet Hardware",
-    tagline: "Quiet motion, smart access and clean cabinetry details.",
-    description:
-      "Drawer systems, pantry pull-outs, corner units and cabinet hardware for efficient modular kitchens.",
-    filters: [
-      { label: "Type", options: ["Drawer System", "Pantry Pull-Out", "Corner Unit", "Handle Profile"] },
-      { label: "Finish", options: ["Matte Black", "Brushed Brass", "Stainless Steel", "Graphite"] },
-    ],
-  },
 ];
 
 export const verticalMeta: Record<
   string,
-  { name: string; slug: string; tagline: string; tone: "bath" | "tile" | "hardware" | "kitchen" }
+  {
+    name: string;
+    slug: string;
+    tagline: string;
+    heroDescription: string;
+    tone: "bath" | "tile" | "hardware" | "kitchen";
+  }
 > = {
   "bathroom-accessories": {
     name: "Bathroom Accessories",
     slug: "bathroom-accessories",
     tagline: "Fittings and fixtures for the modern bath.",
+    heroDescription: "Faucets, showers and sanitaryware finished to a designer standard.",
     tone: "bath",
   },
   "ceramic-tiles": {
     name: "Ceramic Tiles",
     slug: "ceramic-tiles",
     tagline: "Surfaces that define a space.",
+    heroDescription: "Floor, wall and large-format tiles in every texture and tone.",
     tone: "tile",
   },
   hardware: {
     name: "Hardware",
     slug: "hardware",
     tagline: "Considered details for doors, cabinets and more.",
+    heroDescription: "Door, cabinet and security hardware - the details that matter.",
     tone: "hardware",
   },
   kitchen: {
     name: "Kitchen",
     slug: "kitchen",
     tagline: "Fixtures, surfaces and storage for the heart of the home.",
+    heroDescription: "Kitchen fittings, surfaces and storage for composed everyday use.",
     tone: "kitchen",
   },
 };

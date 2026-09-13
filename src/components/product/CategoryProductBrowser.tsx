@@ -31,6 +31,31 @@ export function CategoryProductBrowser({
 
   const activeCount = Object.values(selected).reduce((sum, set) => sum + set.size, 0);
 
+  // A filter option (or whole group) only renders if at least one product in
+  // this category actually matches it — otherwise editors would see dead
+  // checkboxes for values (e.g. "Bidet") nothing in the catalog has yet.
+  const visibleFilterGroups = useMemo(() => {
+    return category.filters
+      .map((group) => ({
+        ...group,
+        options: group.options.filter((option) =>
+          products.some((product) =>
+            productMatchesOption(
+              [
+                product.name,
+                product.collection,
+                ...product.finishes,
+                ...(product.sizes ?? []),
+                ...product.tags,
+              ],
+              option,
+            ),
+          ),
+        ),
+      }))
+      .filter((group) => group.options.length > 0);
+  }, [category.filters, products]);
+
   const filtered = useMemo(() => {
     return products.filter((product) => {
       const candidates = [
@@ -47,60 +72,66 @@ export function CategoryProductBrowser({
     });
   }, [products, selected]);
 
+  const hasFilters = visibleFilterGroups.length > 0;
+
   return (
-    <div className="grid gap-10 lg:grid-cols-[240px_1fr]">
-      <button
-        type="button"
-        onClick={() => setMobileFiltersOpen((v) => !v)}
-        className="flex items-center justify-between rounded-none border border-border px-4 py-3 text-sm font-medium text-ink lg:hidden"
-      >
-        <span className="flex items-center gap-2">
-          <SlidersHorizontal size={16} /> Filters {activeCount > 0 ? `(${activeCount})` : ""}
-        </span>
-      </button>
+    <div className={hasFilters ? "grid gap-10 lg:grid-cols-[240px_1fr]" : ""}>
+      {hasFilters ? (
+        <button
+          type="button"
+          onClick={() => setMobileFiltersOpen((v) => !v)}
+          className="flex items-center justify-between rounded-none border border-border px-4 py-3 text-sm font-medium text-ink lg:hidden"
+        >
+          <span className="flex items-center gap-2">
+            <SlidersHorizontal size={16} /> Filters {activeCount > 0 ? `(${activeCount})` : ""}
+          </span>
+        </button>
+      ) : null}
 
-      <aside className={`${mobileFiltersOpen ? "block" : "hidden"} lg:block`}>
-        <div className="sticky top-24 space-y-8">
-          <div className="flex items-center justify-between">
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-soft">
-              Filter By
-            </p>
-            {activeCount > 0 ? (
-              <button
-                onClick={clearFilters}
-                className="flex items-center gap-1 text-xs font-medium text-accent hover:text-accent-dark"
-              >
-                Clear <X size={12} />
-              </button>
-            ) : null}
-          </div>
-
-          {category.filters.map((group) => (
-            <div key={group.label}>
-              <p className="text-sm font-medium text-ink">{group.label}</p>
-              <div className="mt-3 space-y-2.5">
-                {group.options.map((option) => {
-                  const checked = selected[group.label]?.has(option) ?? false;
-                  return (
-                    <label
-                      key={option}
-                      className="flex cursor-pointer items-center gap-2.5 text-sm text-ink-soft"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={checked}
-                        onChange={() => toggleOption(group.label, option)}
-                        className="h-4 w-4 rounded-none border-border text-accent focus:ring-accent"
-                      />
-                      {option}
-                    </label>
-                  );
-                })}
-              </div>
+      {hasFilters ? (
+        <aside className={`${mobileFiltersOpen ? "block" : "hidden"} lg:block`}>
+          <div className="sticky top-24 space-y-8">
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-soft">
+                Filter By
+              </p>
+              {activeCount > 0 ? (
+                <button
+                  onClick={clearFilters}
+                  className="flex items-center gap-1 text-xs font-medium text-accent hover:text-accent-dark"
+                >
+                  Clear <X size={12} />
+                </button>
+              ) : null}
             </div>
-          ))}
-        </div>
-      </aside>
+
+            {visibleFilterGroups.map((group) => (
+              <div key={group.label}>
+                <p className="text-sm font-medium text-ink">{group.label}</p>
+                <div className="mt-3 space-y-2.5">
+                  {group.options.map((option) => {
+                    const checked = selected[group.label]?.has(option) ?? false;
+                    return (
+                      <label
+                        key={option}
+                        className="flex cursor-pointer items-center gap-2.5 text-sm text-ink-soft"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={() => toggleOption(group.label, option)}
+                          className="h-4 w-4 rounded-none border-border text-accent focus:ring-accent"
+                        />
+                        {option}
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        </aside>
+      ) : null}
 
       <div>
         <div className="mb-6 flex items-center justify-between text-sm text-ink-soft">
