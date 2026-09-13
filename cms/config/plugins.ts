@@ -42,7 +42,7 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin =>
             accessKeyId: env('MINIO_ACCESS_KEY'),
             secretAccessKey: env('MINIO_SECRET_KEY'),
           },
-          region: 'us-east-1',
+          region: env('MINIO_REGION', 'us-east-1'),
           params: {
             Bucket: env('MINIO_BUCKET'),
           },
